@@ -28,7 +28,6 @@ for idx, line in enumerate(lines):
 
   if (len(parts) >= 3):  
     if (parts[2] == "INDI"):
-      print("in INDI")
       num = re.findall(r'\d+', parts[1])
       if (idx + 1 < len(lines)):
         nextLine = lines[idx + 1].strip()
@@ -69,7 +68,6 @@ for idx, line in enumerate(lines):
         indTable.add_row([num[0], name, sex, birt, deat])
           
     elif (parts[2] == "FAM"):
-      print("in FAM")
       num = re.findall(r'\d+', parts[1])
       if (idx + 2 < len(lines)):
         husbLine = lines[idx + 1].strip()
@@ -136,5 +134,7 @@ for fam in sortedFamDict.keys():
 
 print(famTable)
 
-# print(sortedIndDict)
-# print(sortedFamDict)
+with open('output.txt', 'w') as out:
+  out.write(str(indTable))
+  out.write('\n')
+  out.write(str(famTable))
