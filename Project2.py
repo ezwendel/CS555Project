@@ -135,6 +135,8 @@ for fam in sortedFamDict.keys():
 print(famTable)
 
 with open('output.txt', 'w') as out:
+  out.write('Individuals\n')
   out.write(str(indTable))
   out.write('\n')
+  out.write('Families\n')
   out.write(str(famTable))
