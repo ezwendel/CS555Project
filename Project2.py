@@ -128,6 +128,8 @@ def analyse_gedcom(name = "gedcomfile.ged"):
           entry = { 'id': idEntry, 'husbId': husbIdEntry, 'wifeId': wifeIdEntry, 'marr': marrEntry, 'div': divEntry, 'chil': chilEntry }
           famDict[int(num[0])] = entry
 
+  gedFile.close()
+
   return indDict, famDict
 
 def print_ged_tables(indDict, famDict, outfile):
@@ -302,5 +304,5 @@ if __name__ == "__main__":
   use_case_02_errors = use_case_02(indDict, famDict)
   print(use_case_02_errors)
   
-  with open('output.txt', 'w') as out:
-    print_ged_tables(indDict, famDict, out)
+  # with open('output.txt', 'w') as out:
+  #   print_ged_tables(indDict, famDict, out)
