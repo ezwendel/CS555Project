@@ -4,6 +4,7 @@
 import sys
 import re
 from prettytable import PrettyTable
+from datetime import datetime
 
 def analyse_gedcom(name = "gedcomfile.ged"):
   gedFile = open(name)
@@ -185,11 +186,121 @@ def print_ged_tables(indDict, famDict, outfile):
   outfile.write('Families\n')
   outfile.write(str(famTable))
 
+def use_case_01(indDict, famDict):
+  indIds = list(indDict.keys())
+  indIds.sort()
+  sortedIndDict = {i: indDict[i] for i in indIds}
+
+  familyIds = list(famDict.keys())
+  familyIds.sort()
+  sortedFamDict = {i: famDict[i] for i in familyIds}
+
+  current_datetime = datetime.date(datetime.now())
+
+  error_list = []
+
+  for indId in sortedIndDict.keys():
+    indInfo = sortedIndDict[indId]
+
+    id = indId
+    name = indInfo['name'][0]
+    birt = indInfo['birt']
+    deat = indInfo['deat']
+
+    if (birt[0] != "N/A"):
+      birt_object = datetime.strptime(birt[0], '%d %b %Y').date()
+
+      if (birt_object > current_datetime):
+        error_list.append((birt[1], f'Error US01: Birth date of {name} is after the current date.'))
+
+    if (deat[0] != "N/A"):
+      deat_object = datetime.strptime(deat[0], '%d %b %Y').date()
+
+      if (deat_object > current_datetime):
+        error_list.append((deat[1], f'Error US01: Death date of {name} is after the current date.'))
+
+  for famId in sortedFamDict.keys():
+    famInfo = sortedFamDict[famId]
+
+    id = famId
+    husbId = famInfo['husbId'][0]
+    wifeId = famInfo['wifeId'][0]
+    marr = famInfo['marr']
+    div = famInfo['div']
+
+    husb = indDict[husbId]['name'][0]
+    wife = indDict[wifeId]['name'][0]
+
+    if (marr[0] != "N/A"):
+      marr_object = datetime.strptime(marr[0], '%d %b %Y').date()
+      if (marr_object > current_datetime):
+        error_list.append((marr[1], f'Error US01: Marriage date of {husb} and {wife} is after the current date.'))
+
+    if (div[0] != "N/A"):
+      div_object = datetime.strptime(div[0], '%d %b %Y').date()
+      if (div_object > current_datetime):
+        error_list.append((div[1], f'Error US01: Divorce date of {husb} and {wife} is after the current date.'))
+
+  return error_list
+
+def use_case_02(indDict, famDict):
+  indIds = list(indDict.keys())
+  indIds.sort()
+  sortedIndDict = {i: indDict[i] for i in indIds}
+
+  familyIds = list(famDict.keys())
+  familyIds.sort()
+  sortedFamDict = {i: famDict[i] for i in familyIds}
+
+  current_datetime = datetime.date(datetime.now())
+
+  error_list = []
+
+  for famId in sortedFamDict.keys():
+    famInfo = sortedFamDict[famId]
+
+    id = famId
+    husbId = famInfo['husbId'][0]
+    wifeId = famInfo['wifeId'][0]
+    marr = famInfo['marr']
+    div = famInfo['div']
+
+    husbInfo = indDict[husbId]
+    wifeInfo = indDict[wifeId]
+
+    husb = indDict[husbId]['name'][0]
+    wife = indDict[wifeId]['name'][0]
+
+    if (marr[0] != "N/A"):
+      marr_object = datetime.strptime(marr[0], '%d %b %Y').date()
+      
+      husbBirt = husbInfo['birt']
+      wifeBirt = wifeInfo['birt']
+
+      if (husbBirt[0] != "N/A"):
+        birt_object = datetime.strptime(husbBirt[0], '%d %b %Y').date()
+
+        if (birt_object > marr_object):
+          error_list.append((husbBirt[1], f'Error US01: Birth date of {husb} is after the marriage date with {wife}.'))
+      
+      if (wifeBirt[0] != "N/A"):
+        birt_object = datetime.strptime(wifeBirt[0], '%d %b %Y').date()
+
+        if (birt_object > marr_object):
+          error_list.append((wifeBirt[1], f'Error US01: Birth date of {wife} is after the marriage date with {husb}.'))
+  return error_list
 
 if __name__ == "__main__":
   if len(sys.argv) != 2:
     print("requires an argument (filename)")
 
   indDict, famDict = analyse_gedcom(sys.argv[1])
+  
+  use_case_01_errors = use_case_01(indDict, famDict)
+  print(use_case_01_errors)
+
+  use_case_02_errors = use_case_02(indDict, famDict)
+  print(use_case_02_errors)
+  
   with open('output.txt', 'w') as out:
     print_ged_tables(indDict, famDict, out)
