@@ -19,5 +19,15 @@ class TestUseCases(unittest.TestCase):
 
     self.assertListEqual(expected_errors, actual_errors)
 
+  def test_futurechild_US01(self):
+    expected_errors = [
+      (38,'Error US01: Birth date of FutureChild Normal is after the current date.')
+    ]
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US01_futurechild.ged')
+    actual_errors = p2.use_case_01(indDict, famDict)
+
+    self.assertListEqual(expected_errors, actual_errors)
+
 if __name__ == '__main__':
     unittest.main()
