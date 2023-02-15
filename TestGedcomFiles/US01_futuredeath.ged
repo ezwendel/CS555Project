@@ -1,0 +1,24 @@
+0 HEAD
+1 SOUR Family Echo
+2 WWW http://www.familyecho.com/
+1 FILE Family 10
+1 DATE 14 FEB 2023
+1 DEST ANSTFILE
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 SUBM @I1@
+2 NAME ezwendel@gmail.com
+1 SUBN
+1 CHAR UTF-8
+0 @I1@ INDI
+1 NAME Guy /WhoWillDie/
+2 GIVN Guy
+2 SURN WhoWillDie
+2 _MARNM WhoWillDie
+1 SEX M
+1 BIRT
+2 DATE 7 AUG 1965
+1 DEAT Y
+2 DATE 6 NOV 2053
+0 TRLR

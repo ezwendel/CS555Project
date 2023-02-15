@@ -20,11 +20,33 @@ class TestUseCases(unittest.TestCase):
     self.assertListEqual(expected_errors, actual_errors)
 
   def test_futurechild_US01(self):
-    expected_errors = [
-      (38,'Error US01: Birth date of FutureChild Normal is after the current date.')
-    ]
+    expected_errors = [(38,'Error US01: Birth date of Child Future is after the current date.')]
 
     indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US01_futurechild.ged')
+    actual_errors = p2.use_case_01(indDict, famDict)
+
+    self.assertListEqual(expected_errors, actual_errors)
+
+  def test_normal_US01(self):
+    expected_errors = []
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US01_normal.ged')
+    actual_errors = p2.use_case_01(indDict, famDict)
+
+    self.assertListEqual(expected_errors, actual_errors)
+
+  def test_futuredeath_US01(self):
+    expected_errors = [(22, 'Error US01: Death date of Guy WhoWillDie is after the current date.')]
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US01_futuredeath.ged')
+    actual_errors = p2.use_case_01(indDict, famDict)
+
+    self.assertListEqual(expected_errors, actual_errors)
+  
+  def test_futuremarriage_US01(self):
+    expected_errors = [(45, 'Error US01: Marriage date of Incorrect Marriage and Weird Union is after the current date.')]
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US01_futuremarriage.ged')
     actual_errors = p2.use_case_01(indDict, famDict)
 
     self.assertListEqual(expected_errors, actual_errors)
