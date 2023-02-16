@@ -1,0 +1,53 @@
+0 HEAD
+1 SOUR Family Echo
+2 WWW http://www.familyecho.com/
+1 FILE Family 6
+1 DATE 13 FEB 2023
+1 DEST ANSTFILE
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 SUBM @I1@
+2 NAME ezwendel@gmail.com
+1 SUBN
+1 CHAR UTF-8
+0 @I1@ INDI
+1 NAME Hubert /Farnsworth/
+2 GIVN Hubert
+2 SURN Farnsworth
+2 _MARNM Farnsworth
+1 SEX M
+1 BIRT
+2 DATE 9 APR 2841
+1 FAMC @F1@
+0 @I2@ INDI
+1 NAME Ned /Farnsworth/
+2 GIVN Ned
+2 SURN Farnsworth
+2 _MARNM Farnsworth
+1 SEX M
+1 BIRT
+2 DATE 5 JUL 2797
+1 DEAT Y
+2 DATE 11 MAR 2904
+1 FAMS @F1@
+0 @I3@ INDI
+1 NAME Velma /Bolton/
+2 GIVN Velma
+2 SURN Bolton
+2 _MARNM Farnsworth
+1 SEX F
+1 BIRT
+2 DATE 8 JUL 2803
+1 FAMS @F1@
+0 @F1@ FAM
+1 HUSB @I2@
+1 WIFE @I3@
+1 CHIL @I1@
+1 MARR
+2 DATE 16 OCT 2828
+1 DIV
+2 DATE 27 JAN 2861
+1 _CURRENT Y
+1 _PRIMARY Y
+0 TRLR

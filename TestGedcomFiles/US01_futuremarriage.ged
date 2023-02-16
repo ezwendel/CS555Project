@@ -1,0 +1,49 @@
+0 HEAD
+1 SOUR Family Echo
+2 WWW http://www.familyecho.com/
+1 FILE Family 9
+1 DATE 14 FEB 2023
+1 DEST ANSTFILE
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 SUBM @I1@
+2 NAME ezwendel@gmail.com
+1 SUBN
+1 CHAR UTF-8
+0 @I1@ INDI
+1 NAME Different /Marriage/
+2 GIVN Different
+2 SURN Marriage
+2 _MARNM Marriage
+1 SEX F
+1 BIRT
+2 DATE 8 JUN 2022
+1 FAMC @F1@
+0 @I2@ INDI
+1 NAME Incorrect /Marriage/
+2 GIVN Incorrect
+2 SURN Marriage
+2 _MARNM Marriage
+1 SEX M
+1 BIRT
+2 DATE 4 NOV 2000
+1 FAMS @F1@
+0 @I3@ INDI
+1 NAME Weird /Union/
+2 GIVN Weird
+2 SURN Union
+2 _MARNM Marriage
+1 SEX F
+1 BIRT
+2 DATE 12 MAY 2000
+1 FAMS @F1@
+0 @F1@ FAM
+1 HUSB @I2@
+1 WIFE @I3@
+1 CHIL @I1@
+1 MARR
+2 DATE 9 OCT 2024
+1 _CURRENT Y
+1 _PRIMARY Y
+0 TRLR
