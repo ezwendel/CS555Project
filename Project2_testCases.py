@@ -51,5 +51,36 @@ class TestUseCases(unittest.TestCase):
 
     self.assertListEqual(expected_errors, actual_errors)
 
+  def test_bothmarriedearly_US02(self):
+    expected_errors = [
+      (29, 'Error US01: Birth date of Too Early is after the marriage date with Married BeforeBorn.'),
+      (20,'Error US01: Birth date of Married BeforeBorn is after the marriage date with Too Early.')
+    ]
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US02_bothmarriedearly.ged')
+    actual_errors = p2.use_case_02(indDict, famDict)
+
+    self.assertCountEqual(expected_errors, actual_errors)
+
+  def test_wifemarriedbeforebirth_US02(self):
+    expected_errors = [
+      (20,'Error US01: Birth date of Married BeforeBorn is after the marriage date with NotToo Early.')
+    ]
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US02_wifemarriedbeforebirth.ged')
+    actual_errors = p2.use_case_02(indDict, famDict)
+
+    self.assertListEqual(expected_errors, actual_errors)
+
+  def test_husbmarriedbeforebirth_US02(self):
+    expected_errors = [
+      (29, 'Error US01: Birth date of Too Early is after the marriage date with NotMarried BeforeBorn.')
+    ]
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US02_husbmarriedbeforebirth.ged')
+    actual_errors = p2.use_case_02(indDict, famDict)
+
+    self.assertListEqual(expected_errors, actual_errors)
+
 if __name__ == '__main__':
     unittest.main()
