@@ -101,6 +101,47 @@ class TestUseCases(unittest.TestCase):
     actual_errors = p2.user_story_19(indDict, famDict)
 
     self.assertListEqual(expected_errors, actual_errors)
+
+  def test_undead_US03(self):
+    expected_errors = [
+      (20, 'ERROR US03: Individual 1 has birth date (4 FEB 2020) after death date (2 MAR 2019).')
+    ]
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\undead.ged')
+    actual_errors = p2.birth_before_death(indDict)
+
+    self.assertListEqual(expected_errors, actual_errors)
+  
+  def test_undead_US04(self):
+    expected_errors = [
+      (35, 'ERROR US04: Family 1 has marriage date (7 MAR 2022) after divorce date (5 JUL 2021).')
+    ]
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\undead.ged')
+    actual_errors = p2.marriage_before_divorce(famDict)
+
+    self.assertListEqual(expected_errors, actual_errors)
+
+  def test_undead_US05(self):
+    expected_errors = [
+      (22, 'Error US05: Death date of Undead Guy is before the marriage date with Normal Person.')
+    ]
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\undead.ged')
+    actual_errors = p2.user_story_05(indDict, famDict)
+
+    self.assertListEqual(expected_errors, actual_errors)
+  
+  def test_undead_US06(self):
+    expected_errors = [
+      (22, 'Error US06: Death date of Undead Guy is before the divorce date with Normal Person.')
+    ]
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\undead.ged')
+    actual_errors = p2.user_story_06(indDict, famDict)
+
+    self.assertListEqual(expected_errors, actual_errors)
+  
   
 
 if __name__ == '__main__':
