@@ -7,6 +7,32 @@ import re
 import prettytable
 from datetime import datetime
 
+def birth_before_death(indDict):
+    for id, entry in indDict.items():
+        birt_date = entry['birt'][0]
+        deat_date = entry['deat'][0]
+        
+        if birt_date != "N/A" and deat_date != "N/A":
+            birt = datetime.strptime(birt_date, '%d %b %Y')
+            deat = datetime.strptime(deat_date, '%d %b %Y')
+            
+            if birt > deat:
+                print(f"ERROR: Individual {id} has birth date ({birt_date}) after death date ({deat_date}).")
+
+
+def marriage_before_divorce(famDict):
+    for id, entry in famDict.items():
+        marr_date = entry['marr'][0]
+        div_date = entry['div'][0]
+        
+        if marr_date != "N/A" and div_date != "N/A":
+            marr = datetime.strptime(marr_date, '%d %b %Y')
+            div = datetime.strptime(div_date, '%d %b %Y')
+            
+            if marr > div:
+                print(f"ERROR: Family {id} has marriage date ({marr_date}) after divorce date ({div_date}).")
+
+
 def analyse_gedcom(name = "gedcomfile.ged"):
   gedFile = open(name)
   lines = gedFile.readlines()
