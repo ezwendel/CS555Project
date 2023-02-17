@@ -397,7 +397,15 @@ if __name__ == "__main__":
   user_story_02_errors = user_story_02(indDict, famDict)
   print(user_story_02_errors)
 
+  user_story_05_errors = user_story_05(indDict, famDict)
+  print(user_story_05_errors)
+
+  user_story_06_errors = user_story_06(indDict, famDict)
+  print(user_story_06_errors)
+
   with open('output.txt', 'w') as out:
     print_ged_tables(indDict, famDict, out)
     print_errors(user_story_01_errors, out)
     print_errors(user_story_02_errors, out)
+    print_errors(user_story_05_errors, out)
+    print_errors(user_story_06_errors, out)
