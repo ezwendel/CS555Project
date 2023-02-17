@@ -39,4 +39,6 @@ Families
 |     8     |  Colin Mills   |  Melissa Manzo   |      N/A      |     N/A      |                 ['Remi Manzo']                 |
 |     9     |  James Honzer  |     Pat Dwan     |   6 JUN 2004  |     N/A      |                       []                       |
 |     10    |  Bruce Wendel  | Doranna Emmanuel |  10 JUN 1982  |     N/A      | ['Lily Wendel', 'Zoe Wendel', 'Olivia Wendel'] |
-+-----------+----------------+------------------+---------------+--------------+------------------------------------------------+Error US01: Birth date of Moses Emmanuel is after the current date.Error US02: Birth date of Moses Emmanuel is after the marriage date with Shana Brook.
++-----------+----------------+------------------+---------------+--------------+------------------------------------------------+Errors
+Error US01: Birth date of Moses Emmanuel is after the current date.
+Error US02: Birth date of Moses Emmanuel is after the marriage date with Shana Brook.

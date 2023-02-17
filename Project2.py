@@ -380,10 +380,91 @@ def user_story_06(indDict, famDict):
           error_list.append((wifeDeat[1], f'Error US06: Death date of {wife} is before the divorce date with {husb}.'))
   return error_list
 
+def get_siblings(indDict, famDict):
+  sibling_pairs = []
+
+  for indId in indDict.keys():
+    chil = get_children(famDict, indId)
+
+    for i in range(len(chil)):
+      for j in range(i+1, len(chil)):
+        sibling_pairs.append((chil[i], chil[j]))
+  
+  return list(set([tuple(sorted(i)) for i in sibling_pairs]))
+
+def get_children(famDict, indId):
+  all_children = []
+  for famId in famDict.keys():
+    famInfo = famDict[famId]
+
+    husbId = famInfo['husbId'][0]
+    wifeId = famInfo['wifeId'][0]
+    chil = famInfo['chil']
+
+    if (husbId == indId or wifeId == indId):
+      for child in chil:
+        all_children.append(child[0])
+  return all_children
+
+def get_first_cousins(indDict, famDict):
+  birth_siblings = get_siblings(indDict, famDict)
+  first_cousins = []
+
+  for sibling_pair in birth_siblings:
+    a, b = sibling_pair
+    a_chil = get_children(famDict, a)
+    b_chil = get_children(famDict, b)
+
+    for a_child in a_chil:
+      for b_child in b_chil:
+        first_cousins.append((a_child, b_child))
+  return first_cousins
+
+def user_story_18(indDict, famDict):
+  siblings = get_siblings(indDict, famDict)
+
+  error_list = []
+
+  for famId in famDict.keys():
+    famInfo = famDict[famId]
+
+    line = famInfo['id'][1]
+    husbId = famInfo['husbId'][0]
+    wifeId = famInfo['wifeId'][0]
+
+    husb = indDict[husbId]['name'][0]
+    wife = indDict[wifeId]['name'][0]
+
+    for sibling_pair in siblings:
+      if (sorted(sibling_pair) == sorted((husbId, wifeId))):
+        error_list.append((line, f'Error US18: Siblings {husb} and {wife} should not be married.'))
+  return error_list
+
+def user_story_19(indDict, famDict):
+  cousins = get_first_cousins(indDict, famDict)
+
+  error_list = []
+
+  for famId in famDict.keys():
+    famInfo = famDict[famId]
+
+    line = famInfo['id'][1]
+    husbId = famInfo['husbId'][0]
+    wifeId = famInfo['wifeId'][0]
+
+    husb = indDict[husbId]['name'][0]
+    wife = indDict[wifeId]['name'][0]
+
+    for cousin_pair in cousins:
+      if (sorted(cousin_pair) == sorted((husbId, wifeId))):
+        error_list.append((line, f'Error US19: Cousins {husb} and {wife} should not be married.'))
+  return error_list
+
 def print_errors(error_list, out):
   for error in error_list:
     print(error[1])
     out.write(error[1])
+    out.write('\n')
 
 if __name__ == "__main__":
   if len(sys.argv) != 2:
@@ -403,8 +484,13 @@ if __name__ == "__main__":
   user_story_06_errors = user_story_06(indDict, famDict)
   print(user_story_06_errors)
 
+  print(get_siblings(indDict, famDict))
+  print(get_children(famDict, 2))
+  print(get_first_cousins(indDict, famDict))
+
   with open('output.txt', 'w') as out:
     print_ged_tables(indDict, famDict, out)
+    out.write('Errors\n')
     print_errors(user_story_01_errors, out)
     print_errors(user_story_02_errors, out)
     print_errors(user_story_05_errors, out)

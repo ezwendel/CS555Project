@@ -82,5 +82,26 @@ class TestUseCases(unittest.TestCase):
 
     self.assertListEqual(expected_errors, actual_errors)
 
+  def test_siblingmarriage_US18(self):
+    expected_errors = [
+      (44, 'Error US18: Siblings Bro Ther and Daugh Ther should not be married.')
+    ]
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US18_siblingmarriage.ged')
+    actual_errors = p2.user_story_18(indDict, famDict)
+
+    self.assertListEqual(expected_errors, actual_errors)
+
+  def test_cousinmarriage_US19(self):
+    expected_errors = [
+      (95, 'Error US19: Cousins Bro2 Ther and Daugh Ther should not be married.')
+    ]
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US19_cousinmarriage.ged')
+    actual_errors = p2.user_story_19(indDict, famDict)
+
+    self.assertListEqual(expected_errors, actual_errors)
+  
+
 if __name__ == '__main__':
     unittest.main()
