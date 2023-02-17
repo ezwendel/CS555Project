@@ -8,6 +8,8 @@ from prettytable import PrettyTable
 from datetime import datetime
 
 def birth_before_death(indDict):
+    error_list = []
+
     for id, entry in indDict.items():
         birt_date = entry['birt'][0]
         deat_date = entry['deat'][0]
@@ -17,10 +19,14 @@ def birth_before_death(indDict):
             deat = datetime.strptime(deat_date, '%d %b %Y')
             
             if birt > deat:
-                print(f"ERROR: Individual {id} has birth date ({birt_date}) after death date ({deat_date}).")
+                error_list.append(( entry['birt'][1], f"ERROR US03: Individual {id} has birth date ({birt_date}) after death date ({deat_date})."))
+    
+    return error_list
 
 
 def marriage_before_divorce(famDict):
+    error_list = []
+
     for id, entry in famDict.items():
         marr_date = entry['marr'][0]
         div_date = entry['div'][0]
@@ -30,7 +36,9 @@ def marriage_before_divorce(famDict):
             div = datetime.strptime(div_date, '%d %b %Y')
             
             if marr > div:
-                print(f"ERROR: Family {id} has marriage date ({marr_date}) after divorce date ({div_date}).")
+                error_list.append(( entry['marr'][1], f"ERROR US04: Family {id} has marriage date ({marr_date}) after divorce date ({div_date})."))
+    
+    return error_list
 
 def analyse_gedcom(name = "gedcomfile.ged"):
   gedFile = open(name)
@@ -205,7 +213,9 @@ def print_ged_tables(indDict, famDict, outfile):
 
     famTable.add_row([id, husb, wife, marr, div, chil])
 
+  print('Individuals')
   print(indTable)
+  print('Families')
   print(famTable)
   
   outfile.write('Individuals\n')
@@ -499,29 +509,28 @@ if __name__ == "__main__":
   indDict, famDict = analyse_gedcom(sys.argv[1])
   
   user_story_01_errors = user_story_01(indDict, famDict)
-  print(user_story_01_errors)
 
   user_story_02_errors = user_story_02(indDict, famDict)
-  print(user_story_02_errors)
+
+  user_story_03_errors = birth_before_death(indDict)
+
+  user_story_04_errors = marriage_before_divorce(famDict)
 
   user_story_05_errors = user_story_05(indDict, famDict)
-  print(user_story_05_errors)
 
   user_story_06_errors = user_story_06(indDict, famDict)
-  print(user_story_06_errors)
 
   user_story_18_errors = user_story_18(indDict, famDict)
-  print(user_story_18_errors)
 
   user_story_19_errors = user_story_19(indDict, famDict)
-  print(user_story_19_errors)
-
 
   with open('output.txt', 'w') as out:
     print_ged_tables(indDict, famDict, out)
     out.write('\nErrors\n')
     print_errors(user_story_01_errors, out)
     print_errors(user_story_02_errors, out)
+    print_errors(user_story_03_errors, out)
+    print_errors(user_story_04_errors, out)
     print_errors(user_story_05_errors, out)
     print_errors(user_story_06_errors, out)
     print_errors(user_story_18_errors, out)
