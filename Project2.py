@@ -292,6 +292,94 @@ def use_case_02(indDict, famDict):
           error_list.append((wifeBirt[1], f'Error US01: Birth date of {wife} is after the marriage date with {husb}.'))
   return error_list
 
+def use_case_05(indDict, famDict):
+  indIds = list(indDict.keys())
+  indIds.sort()
+  sortedIndDict = {i: indDict[i] for i in indIds}
+
+  familyIds = list(famDict.keys())
+  familyIds.sort()
+  sortedFamDict = {i: famDict[i] for i in familyIds}
+
+  error_list = []
+
+  for famId in sortedFamDict.keys():
+    famInfo = sortedFamDict[famId]
+
+    id = famId
+    husbId = famInfo['husbId'][0]
+    wifeId = famInfo['wifeId'][0]
+    marr = famInfo['marr']
+
+    husbInfo = indDict[husbId]
+    wifeInfo = indDict[wifeId]
+
+    husb = indDict[husbId]['name'][0]
+    wife = indDict[wifeId]['name'][0]
+
+    if (marr[0] != "N/A"):
+      marr_object = datetime.strptime(marr[0], '%d %b %Y').date()
+      
+      husbDeat = husbInfo['deat']
+      wifeDeat = wifeInfo['deat']
+
+      if (husbDeat[0] != "N/A"):
+        deat_object = datetime.strptime(husbDeat[0], '%d %b %Y').date()
+
+        if (deat_object < marr_object):
+          error_list.append((husbDeat[1], f'Error US05: Death date of {husb} is before the marriage date with {wife}.'))
+      
+      if (wifeDeat[0] != "N/A"):
+        deat_object = datetime.strptime(wifeDeat[0], '%d %b %Y').date()
+
+        if (deat_object < marr_object):
+          error_list.append((wifeDeat[1], f'Error US05: Death date of {wife} is before the marriage date with {husb}.'))
+  return error_list
+
+def use_case_06(indDict, famDict):
+  indIds = list(indDict.keys())
+  indIds.sort()
+  sortedIndDict = {i: indDict[i] for i in indIds}
+
+  familyIds = list(famDict.keys())
+  familyIds.sort()
+  sortedFamDict = {i: famDict[i] for i in familyIds}
+
+  error_list = []
+
+  for famId in sortedFamDict.keys():
+    famInfo = sortedFamDict[famId]
+
+    id = famId
+    husbId = famInfo['husbId'][0]
+    wifeId = famInfo['wifeId'][0]
+    div = famInfo['div']
+
+    husbInfo = indDict[husbId]
+    wifeInfo = indDict[wifeId]
+
+    husb = indDict[husbId]['name'][0]
+    wife = indDict[wifeId]['name'][0]
+
+    if (div[0] != "N/A"):
+      div_object = datetime.strptime(div[0], '%d %b %Y').date()
+      
+      husbDeat = husbInfo['deat']
+      wifeDeat = wifeInfo['deat']
+
+      if (husbDeat[0] != "N/A"):
+        deat_object = datetime.strptime(husbDeat[0], '%d %b %Y').date()
+
+        if (deat_object < div_object):
+          error_list.append((husbDeat[1], f'Error US06: Death date of {husb} is before the divorce date with {wife}.'))
+      
+      if (wifeDeat[0] != "N/A"):
+        deat_object = datetime.strptime(wifeDeat[0], '%d %b %Y').date()
+
+        if (deat_object < div_object):
+          error_list.append((wifeDeat[1], f'Error US06: Death date of {wife} is before the divorce date with {husb}.'))
+  return error_list
+
 if __name__ == "__main__":
   if len(sys.argv) != 2:
     print("requires an argument (filename)")
