@@ -1,37 +1,10 @@
 # Elijah Wendel
-# Kshitij Gugale
 # I pledge my honor that I have abided by the Stevens Honor System.
 
 import sys
 import re
-import prettytable
+from prettytable import PrettyTable
 from datetime import datetime
-
-def birth_before_death(indDict):
-    for id, entry in indDict.items():
-        birt_date = entry['birt'][0]
-        deat_date = entry['deat'][0]
-        
-        if birt_date != "N/A" and deat_date != "N/A":
-            birt = datetime.strptime(birt_date, '%d %b %Y')
-            deat = datetime.strptime(deat_date, '%d %b %Y')
-            
-            if birt > deat:
-                print(f"ERROR: Individual {id} has birth date ({birt_date}) after death date ({deat_date}).")
-
-
-def marriage_before_divorce(famDict):
-    for id, entry in famDict.items():
-        marr_date = entry['marr'][0]
-        div_date = entry['div'][0]
-        
-        if marr_date != "N/A" and div_date != "N/A":
-            marr = datetime.strptime(marr_date, '%d %b %Y')
-            div = datetime.strptime(div_date, '%d %b %Y')
-            
-            if marr > div:
-                print(f"ERROR: Family {id} has marriage date ({marr_date}) after divorce date ({div_date}).")
-
 
 def analyse_gedcom(name = "gedcomfile.ged"):
   gedFile = open(name)
@@ -168,10 +141,10 @@ def print_ged_tables(indDict, famDict, outfile):
   familyIds.sort()
   sortedFamDict = {i: famDict[i] for i in familyIds}
 
-  indTable = prettytable()
+  indTable = PrettyTable()
   indTable.field_names = ["Individual Id", "Name", "Sex", "Birthday", "Death Date"]
 
-  famTable = prettytable()
+  famTable = PrettyTable()
   famTable.field_names = ["Family Id", "Husband", "Wife", "Marriage Date", "Divorce Date", "Children"]
 
   for ind in sortedIndDict.keys():
@@ -215,7 +188,7 @@ def print_ged_tables(indDict, famDict, outfile):
   outfile.write('Families\n')
   outfile.write(str(famTable))
 
-def use_case_01(indDict, famDict):
+def user_story_01(indDict, famDict):
   indIds = list(indDict.keys())
   indIds.sort()
   sortedIndDict = {i: indDict[i] for i in indIds}
@@ -272,7 +245,7 @@ def use_case_01(indDict, famDict):
 
   return error_list
 
-def use_case_02(indDict, famDict):
+def user_story_02(indDict, famDict):
   indIds = list(indDict.keys())
   indIds.sort()
   sortedIndDict = {i: indDict[i] for i in indIds}
@@ -310,26 +283,220 @@ def use_case_02(indDict, famDict):
         birt_object = datetime.strptime(husbBirt[0], '%d %b %Y').date()
 
         if (birt_object > marr_object):
-          error_list.append((husbBirt[1], f'Error US01: Birth date of {husb} is after the marriage date with {wife}.'))
+          error_list.append((husbBirt[1], f'Error US02: Birth date of {husb} is after the marriage date with {wife}.'))
       
       if (wifeBirt[0] != "N/A"):
         birt_object = datetime.strptime(wifeBirt[0], '%d %b %Y').date()
 
         if (birt_object > marr_object):
-          error_list.append((wifeBirt[1], f'Error US01: Birth date of {wife} is after the marriage date with {husb}.'))
+          error_list.append((wifeBirt[1], f'Error US02: Birth date of {wife} is after the marriage date with {husb}.'))
   return error_list
+
+def user_story_05(indDict, famDict):
+  indIds = list(indDict.keys())
+  indIds.sort()
+  sortedIndDict = {i: indDict[i] for i in indIds}
+
+  familyIds = list(famDict.keys())
+  familyIds.sort()
+  sortedFamDict = {i: famDict[i] for i in familyIds}
+
+  error_list = []
+
+  for famId in sortedFamDict.keys():
+    famInfo = sortedFamDict[famId]
+
+    id = famId
+    husbId = famInfo['husbId'][0]
+    wifeId = famInfo['wifeId'][0]
+    marr = famInfo['marr']
+
+    husbInfo = indDict[husbId]
+    wifeInfo = indDict[wifeId]
+
+    husb = indDict[husbId]['name'][0]
+    wife = indDict[wifeId]['name'][0]
+
+    if (marr[0] != "N/A"):
+      marr_object = datetime.strptime(marr[0], '%d %b %Y').date()
+      
+      husbDeat = husbInfo['deat']
+      wifeDeat = wifeInfo['deat']
+
+      if (husbDeat[0] != "N/A"):
+        deat_object = datetime.strptime(husbDeat[0], '%d %b %Y').date()
+
+        if (deat_object < marr_object):
+          error_list.append((husbDeat[1], f'Error US05: Death date of {husb} is before the marriage date with {wife}.'))
+      
+      if (wifeDeat[0] != "N/A"):
+        deat_object = datetime.strptime(wifeDeat[0], '%d %b %Y').date()
+
+        if (deat_object < marr_object):
+          error_list.append((wifeDeat[1], f'Error US05: Death date of {wife} is before the marriage date with {husb}.'))
+  return error_list
+
+def user_story_06(indDict, famDict):
+  indIds = list(indDict.keys())
+  indIds.sort()
+  sortedIndDict = {i: indDict[i] for i in indIds}
+
+  familyIds = list(famDict.keys())
+  familyIds.sort()
+  sortedFamDict = {i: famDict[i] for i in familyIds}
+
+  error_list = []
+
+  for famId in sortedFamDict.keys():
+    famInfo = sortedFamDict[famId]
+
+    id = famId
+    husbId = famInfo['husbId'][0]
+    wifeId = famInfo['wifeId'][0]
+    div = famInfo['div']
+
+    husbInfo = indDict[husbId]
+    wifeInfo = indDict[wifeId]
+
+    husb = indDict[husbId]['name'][0]
+    wife = indDict[wifeId]['name'][0]
+
+    if (div[0] != "N/A"):
+      div_object = datetime.strptime(div[0], '%d %b %Y').date()
+      
+      husbDeat = husbInfo['deat']
+      wifeDeat = wifeInfo['deat']
+
+      if (husbDeat[0] != "N/A"):
+        deat_object = datetime.strptime(husbDeat[0], '%d %b %Y').date()
+
+        if (deat_object < div_object):
+          error_list.append((husbDeat[1], f'Error US06: Death date of {husb} is before the divorce date with {wife}.'))
+      
+      if (wifeDeat[0] != "N/A"):
+        deat_object = datetime.strptime(wifeDeat[0], '%d %b %Y').date()
+
+        if (deat_object < div_object):
+          error_list.append((wifeDeat[1], f'Error US06: Death date of {wife} is before the divorce date with {husb}.'))
+  return error_list
+
+def get_siblings(indDict, famDict):
+  sibling_pairs = []
+
+  for indId in indDict.keys():
+    chil = get_children(famDict, indId)
+
+    for i in range(len(chil)):
+      for j in range(i+1, len(chil)):
+        sibling_pairs.append((chil[i], chil[j]))
+  
+  return list(set([tuple(sorted(i)) for i in sibling_pairs]))
+
+def get_children(famDict, indId):
+  all_children = []
+  for famId in famDict.keys():
+    famInfo = famDict[famId]
+
+    husbId = famInfo['husbId'][0]
+    wifeId = famInfo['wifeId'][0]
+    chil = famInfo['chil']
+
+    if (husbId == indId or wifeId == indId):
+      for child in chil:
+        all_children.append(child[0])
+  return all_children
+
+def get_first_cousins(indDict, famDict):
+  birth_siblings = get_siblings(indDict, famDict)
+  first_cousins = []
+
+  for sibling_pair in birth_siblings:
+    a, b = sibling_pair
+    a_chil = get_children(famDict, a)
+    b_chil = get_children(famDict, b)
+
+    for a_child in a_chil:
+      for b_child in b_chil:
+        first_cousins.append((a_child, b_child))
+  return first_cousins
+
+def user_story_18(indDict, famDict):
+  siblings = get_siblings(indDict, famDict)
+
+  error_list = []
+
+  for famId in famDict.keys():
+    famInfo = famDict[famId]
+
+    line = famInfo['id'][1]
+    husbId = famInfo['husbId'][0]
+    wifeId = famInfo['wifeId'][0]
+
+    husb = indDict[husbId]['name'][0]
+    wife = indDict[wifeId]['name'][0]
+
+    for sibling_pair in siblings:
+      if (sorted(sibling_pair) == sorted((husbId, wifeId))):
+        error_list.append((line, f'Error US18: Siblings {husb} and {wife} should not be married.'))
+  return error_list
+
+def user_story_19(indDict, famDict):
+  cousins = get_first_cousins(indDict, famDict)
+
+  error_list = []
+
+  for famId in famDict.keys():
+    famInfo = famDict[famId]
+
+    line = famInfo['id'][1]
+    husbId = famInfo['husbId'][0]
+    wifeId = famInfo['wifeId'][0]
+
+    husb = indDict[husbId]['name'][0]
+    wife = indDict[wifeId]['name'][0]
+
+    for cousin_pair in cousins:
+      if (sorted(cousin_pair) == sorted((husbId, wifeId))):
+        error_list.append((line, f'Error US19: Cousins {husb} and {wife} should not be married.'))
+  return error_list
+
+def print_errors(error_list, out):
+  for error in error_list:
+    print(error[1])
+    out.write(error[1])
+    out.write('\n')
 
 if __name__ == "__main__":
   if len(sys.argv) != 2:
     print("requires an argument (filename)")
 
-  indDict, famDict = analyse_gedcom(sys.argv[0])
+  indDict, famDict = analyse_gedcom(sys.argv[1])
   
-  use_case_01_errors = use_case_01(indDict, famDict)
-  print(use_case_01_errors)
+  user_story_01_errors = user_story_01(indDict, famDict)
+  print(user_story_01_errors)
 
-  use_case_02_errors = use_case_02(indDict, famDict)
-  print(use_case_02_errors)
-  
-  # with open('output.txt', 'w') as out:
-  #   print_ged_tables(indDict, famDict, out)
+  user_story_02_errors = user_story_02(indDict, famDict)
+  print(user_story_02_errors)
+
+  user_story_05_errors = user_story_05(indDict, famDict)
+  print(user_story_05_errors)
+
+  user_story_06_errors = user_story_06(indDict, famDict)
+  print(user_story_06_errors)
+
+  user_story_18_errors = user_story_18(indDict, famDict)
+  print(user_story_18_errors)
+
+  user_story_19_errors = user_story_19(indDict, famDict)
+  print(user_story_19_errors)
+
+
+  with open('output.txt', 'w') as out:
+    print_ged_tables(indDict, famDict, out)
+    out.write('\nErrors\n')
+    print_errors(user_story_01_errors, out)
+    print_errors(user_story_02_errors, out)
+    print_errors(user_story_05_errors, out)
+    print_errors(user_story_06_errors, out)
+    print_errors(user_story_18_errors, out)
+    print_errors(user_story_19_errors, out)

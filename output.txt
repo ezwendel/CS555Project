@@ -3,7 +3,7 @@ Individuals
 | Individual Id |       Name       | Sex |   Birthday  |  Death Date |
 +---------------+------------------+-----+-------------+-------------+
 |       1       |  Elijah Wendel   |  M  |  8 FEB 2000 |     N/A     |
-|       2       |  Moses Emmanuel  |  M  | 24 DEC 1978 |     N/A     |
+|       2       |  Moses Emmanuel  |  M  | 24 DEC 2078 |     N/A     |
 |       3       |   Shana Brook    |  F  | 21 DEC 1985 |     N/A     |
 |       4       | Shannon Baldwin  |  F  |  3 MAY 1978 |     N/A     |
 |       5       |   Chris Madara   |  M  |  6 APR 1985 |     N/A     |
@@ -40,3 +40,6 @@ Families
 |     9     |  James Honzer  |     Pat Dwan     |   6 JUN 2004  |     N/A      |                       []                       |
 |     10    |  Bruce Wendel  | Doranna Emmanuel |  10 JUN 1982  |     N/A      | ['Lily Wendel', 'Zoe Wendel', 'Olivia Wendel'] |
 +-----------+----------------+------------------+---------------+--------------+------------------------------------------------+
+Errors
+Error US01: Birth date of Moses Emmanuel is after the current date.
+Error US02: Birth date of Moses Emmanuel is after the marriage date with Shana Brook.
