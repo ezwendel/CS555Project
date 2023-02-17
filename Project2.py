@@ -3,7 +3,7 @@
 
 import sys
 import re
-from prettytable import PrettyTable
+import prettytable
 from datetime import datetime
 
 def analyse_gedcom(name = "gedcomfile.ged"):
@@ -141,10 +141,10 @@ def print_ged_tables(indDict, famDict, outfile):
   familyIds.sort()
   sortedFamDict = {i: famDict[i] for i in familyIds}
 
-  indTable = PrettyTable()
+  indTable = prettytable()
   indTable.field_names = ["Individual Id", "Name", "Sex", "Birthday", "Death Date"]
 
-  famTable = PrettyTable()
+  famTable = prettytable()
   famTable.field_names = ["Family Id", "Husband", "Wife", "Marriage Date", "Divorce Date", "Children"]
 
   for ind in sortedIndDict.keys():
@@ -296,7 +296,7 @@ if __name__ == "__main__":
   if len(sys.argv) != 2:
     print("requires an argument (filename)")
 
-  indDict, famDict = analyse_gedcom(sys.argv[1])
+  indDict, famDict = analyse_gedcom(sys.argv[0])
   
   use_case_01_errors = use_case_01(indDict, famDict)
   print(use_case_01_errors)
