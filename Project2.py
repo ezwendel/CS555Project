@@ -188,7 +188,7 @@ def print_ged_tables(indDict, famDict, outfile):
   outfile.write('Families\n')
   outfile.write(str(famTable))
 
-def use_case_01(indDict, famDict):
+def user_story_01(indDict, famDict):
   indIds = list(indDict.keys())
   indIds.sort()
   sortedIndDict = {i: indDict[i] for i in indIds}
@@ -245,7 +245,7 @@ def use_case_01(indDict, famDict):
 
   return error_list
 
-def use_case_02(indDict, famDict):
+def user_story_02(indDict, famDict):
   indIds = list(indDict.keys())
   indIds.sort()
   sortedIndDict = {i: indDict[i] for i in indIds}
@@ -283,13 +283,13 @@ def use_case_02(indDict, famDict):
         birt_object = datetime.strptime(husbBirt[0], '%d %b %Y').date()
 
         if (birt_object > marr_object):
-          error_list.append((husbBirt[1], f'Error US01: Birth date of {husb} is after the marriage date with {wife}.'))
+          error_list.append((husbBirt[1], f'Error US02: Birth date of {husb} is after the marriage date with {wife}.'))
       
       if (wifeBirt[0] != "N/A"):
         birt_object = datetime.strptime(wifeBirt[0], '%d %b %Y').date()
 
         if (birt_object > marr_object):
-          error_list.append((wifeBirt[1], f'Error US01: Birth date of {wife} is after the marriage date with {husb}.'))
+          error_list.append((wifeBirt[1], f'Error US02: Birth date of {wife} is after the marriage date with {husb}.'))
   return error_list
 
 def use_case_05(indDict, famDict):
@@ -380,17 +380,24 @@ def use_case_06(indDict, famDict):
           error_list.append((wifeDeat[1], f'Error US06: Death date of {wife} is before the divorce date with {husb}.'))
   return error_list
 
+def print_errors(error_list, out):
+  for error in error_list:
+    print(error[1])
+    out.write(error[1])
+
 if __name__ == "__main__":
   if len(sys.argv) != 2:
     print("requires an argument (filename)")
 
   indDict, famDict = analyse_gedcom(sys.argv[1])
   
-  use_case_01_errors = use_case_01(indDict, famDict)
-  print(use_case_01_errors)
+  user_story_01_errors = user_story_01(indDict, famDict)
+  print(user_story_01_errors)
 
-  use_case_02_errors = use_case_02(indDict, famDict)
-  print(use_case_02_errors)
-  
-  # with open('output.txt', 'w') as out:
-  #   print_ged_tables(indDict, famDict, out)
+  user_story_02_errors = user_story_02(indDict, famDict)
+  print(user_story_02_errors)
+
+  with open('output.txt', 'w') as out:
+    print_ged_tables(indDict, famDict, out)
+    print_errors(user_story_01_errors, out)
+    print_errors(user_story_02_errors, out)
