@@ -484,14 +484,19 @@ if __name__ == "__main__":
   user_story_06_errors = user_story_06(indDict, famDict)
   print(user_story_06_errors)
 
-  print(get_siblings(indDict, famDict))
-  print(get_children(famDict, 2))
-  print(get_first_cousins(indDict, famDict))
+  user_story_18_errors = user_story_18(indDict, famDict)
+  print(user_story_18_errors)
+
+  user_story_19_errors = user_story_19(indDict, famDict)
+  print(user_story_19_errors)
+
 
   with open('output.txt', 'w') as out:
     print_ged_tables(indDict, famDict, out)
-    out.write('Errors\n')
+    out.write('\nErrors\n')
     print_errors(user_story_01_errors, out)
     print_errors(user_story_02_errors, out)
     print_errors(user_story_05_errors, out)
     print_errors(user_story_06_errors, out)
+    print_errors(user_story_18_errors, out)
+    print_errors(user_story_19_errors, out)
