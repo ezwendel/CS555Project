@@ -292,7 +292,7 @@ def user_story_02(indDict, famDict):
           error_list.append((wifeBirt[1], f'Error US02: Birth date of {wife} is after the marriage date with {husb}.'))
   return error_list
 
-def use_case_05(indDict, famDict):
+def user_story_05(indDict, famDict):
   indIds = list(indDict.keys())
   indIds.sort()
   sortedIndDict = {i: indDict[i] for i in indIds}
@@ -336,7 +336,7 @@ def use_case_05(indDict, famDict):
           error_list.append((wifeDeat[1], f'Error US05: Death date of {wife} is before the marriage date with {husb}.'))
   return error_list
 
-def use_case_06(indDict, famDict):
+def user_story_06(indDict, famDict):
   indIds = list(indDict.keys())
   indIds.sort()
   sortedIndDict = {i: indDict[i] for i in indIds}
