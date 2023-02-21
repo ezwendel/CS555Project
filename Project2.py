@@ -416,6 +416,56 @@ def user_story_06(indDict, famDict):
           error_list.append((wifeDeat[1], f'Error US06: Death date of {wife} is before the divorce date with {husb}.'))
   return error_list
 
+def user_story_10(indDict, famDict):
+  indIds = list(indDict.keys())
+  indIds.sort()
+  sortedIndDict = {i: indDict[i] for i in indIds}
+
+  familyIds = list(famDict.keys())
+  familyIds.sort()
+  sortedFamDict = {i: famDict[i] for i in familyIds}
+
+  error_list = []
+
+  for famId in sortedFamDict.keys():
+    famInfo = sortedFamDict[famId]
+
+    id = famId
+    husbId = famInfo['husbId'][0]
+    wifeId = famInfo['wifeId'][0]
+    marr_date = famInfo['marr']
+    div = famInfo['div']
+
+    husbInfo = indDict[husbId]
+    wifeInfo = indDict[wifeId]
+
+    husb = husbInfo['name'][0]
+    wife = wifeInfo['name'][0]
+
+    husb_bd = wifeInfo['birt']
+    wife_bd = wifeInfo['birt']
+
+    if (marr_date[0] != 'N/A'):
+      marr_date_obj = datetime.strptime(marr_date[0], '%d %b %Y').date()
+
+      if (husb_bd[0] != 'N/A'):
+        husb_bd_obj = datetime.strptime(husb_bd[0], '%d %b %Y').date()
+
+        age_at_marriage = marr_date_obj.year - husb_bd_obj.year - ((marr_date_obj.month, marr_date_obj.day) < (husb_bd_obj.month, husb_bd_obj.day))
+
+        if (age_at_marriage < 14):
+          error_list.append((marr_date[1], f'Error US10: {husb} was younger than 14 when he got married to {wife}.'))
+
+      if (wife_bd[0] != 'N/A'):
+        wife_bd_obj = datetime.strptime(wife_bd[0], '%d %b %Y').date()
+
+        age_at_marriage = marr_date_obj.year - wife_bd_obj.year - ((marr_date_obj.month, marr_date_obj.day) < (wife_bd_obj.month, wife_bd_obj.day))
+
+        if (age_at_marriage < 14):
+          error_list.append((marr_date[1], f'Error US10: {wife} was younger than 14 when she got married to {husb}.'))
+
+  return error_list
+
 def get_siblings(indDict, famDict):
   sibling_pairs = []
 
@@ -498,9 +548,11 @@ def user_story_19(indDict, famDict):
 
 def print_errors(error_list, out):
   for error in error_list:
-    print(error[1])
-    out.write(error[1])
-    out.write('\n')
+    # USER STORY 40:
+    line_num = error[0]
+    
+    print(f'Line {line_num}: {error[1]}')
+    out.write(f'Line {line_num}: {error[1]}\n')
 
 if __name__ == "__main__":
   if len(sys.argv) != 2:
@@ -526,6 +578,7 @@ if __name__ == "__main__":
 
   with open('output.txt', 'w') as out:
     print_ged_tables(indDict, famDict, out)
+    print('Errors')
     out.write('\nErrors\n')
     print_errors(user_story_01_errors, out)
     print_errors(user_story_02_errors, out)

@@ -41,5 +41,5 @@ Families
 |     10    |  Bruce Wendel  | Doranna Emmanuel |  10 JUN 1982  |     N/A      | ['Lily Wendel', 'Zoe Wendel', 'Olivia Wendel'] |
 +-----------+----------------+------------------+---------------+--------------+------------------------------------------------+
 Errors
-Error US01: Birth date of Moses Emmanuel is after the current date.
-Error US02: Birth date of Moses Emmanuel is after the marriage date with Shana Brook.
+Line 31: Error US01: Birth date of Moses Emmanuel is after the current date.
+Line 31: Error US02: Birth date of Moses Emmanuel is after the marriage date with Shana Brook.
