@@ -6,6 +6,7 @@ import sys
 import re
 from prettytable import PrettyTable
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 def birth_before_death(indDict):
     error_list = []
@@ -414,6 +415,91 @@ def user_story_06(indDict, famDict):
 
         if (deat_object < div_object):
           error_list.append((wifeDeat[1], f'Error US06: Death date of {wife} is before the divorce date with {husb}.'))
+  return error_list
+
+def user_story_07(indDict, famDict):
+  indIds = list(indDict.keys())
+  indIds.sort()
+  sortedIndDict = {i: indDict[i] for i in indIds}
+
+  familyIds = list(famDict.keys())
+  familyIds.sort()
+  sortedFamDict = {i: famDict[i] for i in familyIds}
+
+  current_datetime = datetime.date(datetime.now())
+
+  error_list = []
+
+  for indId in sortedIndDict.keys():
+    indInfo = sortedIndDict[indId]
+
+    id = indId
+    name = indInfo['name'][0]
+    birt = indInfo['birt']
+    deat = indInfo['deat']
+
+    if (deat[0] != "N/A"):
+      deat_object = datetime.strptime(deat[0], '%d %b %Y').date()
+      birt_object = datetime.strptime(birt[0], '%d %b %Y').date()
+      age = deat_object.year - birt_object.year - \
+        ((deat_object.month, deat_object.day) < (birt_object.month, birt_object.day))
+
+      if (age > 150):
+        error_list.append((deat[1], f'Error US07: Age of {name} is greater than 150.'))
+
+    if (deat[0] == "N/A"):
+      birt_object = datetime.strptime(birt[0], '%d %b %Y').date()
+      age = current_datetime.year - birt_object.year - \
+        ((current_datetime.month, current_datetime.day) < (birt_object.month, birt_object.day))
+
+      if (age > 150):
+        error_list.append((birt[1], f'Error US07: Age of {name} is greater than 150.'))
+  return error_list
+
+def user_story_08(indDict, famDict):
+  indIds = list(indDict.keys())
+  indIds.sort()
+  sortedIndDict = {i: indDict[i] for i in indIds}
+
+  familyIds = list(famDict.keys())
+  familyIds.sort()
+  sortedFamDict = {i: famDict[i] for i in familyIds}
+
+  error_list = []
+
+  for famId in sortedFamDict.keys():
+    famInfo = sortedFamDict[famId]
+
+    id = famId
+    husbId = famInfo['husbId'][0]
+    wifeId = famInfo['wifeId'][0]
+    marr = famInfo['marr']
+    div = famInfo['div']
+
+    husb = indDict[husbId]['name'][0]
+    wife = indDict[wifeId]['name'][0]
+
+    chilInfo = famInfo['chil']
+
+    for chil in chilInfo:
+      chilId = chil[0]
+      name = indDict[chilId]['name'][0]
+      birt = indDict[chilId]['birt']
+
+      if (marr[0] != "N/A"):
+        birt_object = datetime.strptime(birt[0], '%d %b %Y').date()
+        marr_object = datetime.strptime(marr[0], '%d %b %Y').date()
+
+        if (birt_object < marr_object):
+          error_list.append((birt[1], f'Error US08: Birth date of {name} is before the marriage date with {husb} and {wife}.'))
+        
+      if (div[0] != "N/A"):
+        birt_object = datetime.strptime(birt[0], '%d %b %Y').date()
+        div_object = (datetime.strptime(div[0], '%d %b %Y').date()) + relativedelta(months = 9)
+
+        if (birt_object > div_object):
+          error_list.append((birt[1], f'Error US08: Birth date of {name} is after the divorce date with {husb} and {wife}.'))
+
   return error_list
 
 def get_siblings(indDict, famDict):
