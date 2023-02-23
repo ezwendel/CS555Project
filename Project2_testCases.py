@@ -144,6 +144,24 @@ class TestUseCases(unittest.TestCase):
 
     self.assertListEqual(expected_errors, actual_errors)
 
+  def test_US07(self):
+    expected_errors = [(22,'Error US07: Age of Too Old is greater than 150.')]
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US07_lessthan150.ged')
+    actual_errors = p2.user_story_07(indDict, famDict)
+
+    self.assertListEqual(expected_errors, actual_errors)
+
+  def test_US08(self):
+    expected_errors = [
+      (20,'Error US08: Birth date of Birth BeforeMarriage is before the marriage date with Husband BeforeMarriage and Wife BeforeMarriage.')
+    ]
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US08_birthbeforemarriage.ged')
+    actual_errors = p2.user_story_08(indDict, famDict)
+
+    self.assertListEqual(expected_errors, actual_errors)
+
   def test_US10(self):
     expected_errors = []
 
