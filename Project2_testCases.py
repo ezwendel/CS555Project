@@ -1,4 +1,6 @@
 import unittest
+import sys
+import io
 
 import Project2 as p2
 
@@ -141,8 +143,58 @@ class TestUseCases(unittest.TestCase):
     actual_errors = p2.user_story_06(indDict, famDict)
 
     self.assertListEqual(expected_errors, actual_errors)
+
+  def test_US10(self):
+    expected_errors = []
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\undead.ged')
+    actual_errors = p2.user_story_10(indDict, famDict)
+
+    self.assertListEqual(expected_errors, actual_errors)
+
+  def test_US10(self):
+    expected_errors = [
+      (35, 'Error US10: Guy Young was younger than 14 when he got married to Girl Young.'),
+      (35, 'Error US10: Girl Young was younger than 14 when she got married to Guy Young.')]
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US10_youngmarriage.ged')
+    actual_errors = p2.user_story_10(indDict, famDict)
+
+    self.assertListEqual(expected_errors, actual_errors)
   
-  
+  def test_undead_US40(self):
+    expected_out = str('Line 22: Error US06: Death date of Undead Guy is before the divorce date with Normal Person.\n')
+
+    out = io.StringIO("")
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\undead.ged')
+    actual_errors = p2.user_story_06(indDict, famDict)
+
+    p2.print_errors(actual_errors, out)
+
+    actual_out = str(out.getvalue())
+
+    print(expected_out)
+    print(actual_out)
+
+    self.assertEqual(expected_out, actual_out)
+
+  def test_cousinmarriage_US40(self):
+    expected_out = str('Line 95: Error US19: Cousins Bro2 Ther and Daugh Ther should not be married.\n')
+
+    out = io.StringIO("")
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US19_cousinmarriage.ged')
+    actual_errors = p2.user_story_19(indDict, famDict)
+
+    p2.print_errors(actual_errors, out)
+
+    actual_out = str(out.getvalue())
+
+    print(expected_out)
+    print(actual_out)
+
+    self.assertEqual(expected_out, actual_out)
 
 if __name__ == '__main__':
     unittest.main()
