@@ -192,9 +192,6 @@ class TestUseCases(unittest.TestCase):
 
     actual_out = str(out.getvalue())
 
-    print(expected_out)
-    print(actual_out)
-
     self.assertEqual(expected_out, actual_out)
 
   def test_cousinmarriage_US40(self):
@@ -208,9 +205,6 @@ class TestUseCases(unittest.TestCase):
     p2.print_errors(actual_errors, out)
 
     actual_out = str(out.getvalue())
-
-    print(expected_out)
-    print(actual_out)
 
     self.assertEqual(expected_out, actual_out)
 

@@ -8,6 +8,20 @@ from prettytable import PrettyTable
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+def get_sorted_dicts(indDict, famDict):
+  indIds = list(indDict.keys())
+  indIds.sort()
+  sortedIndDict = {i: indDict[i] for i in indIds}
+
+  familyIds = list(famDict.keys())
+  familyIds.sort()
+  sortedFamDict = {i: famDict[i] for i in familyIds}
+
+  return sortedIndDict, sortedFamDict
+
+def get_age_at_time(birth_date, time_to_compare):
+  return time_to_compare.year - birth_date.year - ((time_to_compare.month, time_to_compare.day) < (birth_date.month, birth_date.day))
+
 def birth_before_death(indDict):
     error_list = []
 
@@ -226,20 +240,12 @@ def print_ged_tables(indDict, famDict, outfile):
   outfile.write(str(famTable))
 
 def user_story_01(indDict, famDict):
-  indIds = list(indDict.keys())
-  indIds.sort()
-  sortedIndDict = {i: indDict[i] for i in indIds}
-
-  familyIds = list(famDict.keys())
-  familyIds.sort()
-  sortedFamDict = {i: famDict[i] for i in familyIds}
-
   current_datetime = datetime.date(datetime.now())
 
   error_list = []
 
-  for indId in sortedIndDict.keys():
-    indInfo = sortedIndDict[indId]
+  for indId in indDict.keys():
+    indInfo = indDict[indId]
 
     id = indId
     name = indInfo['name'][0]
@@ -258,8 +264,8 @@ def user_story_01(indDict, famDict):
       if (deat_object > current_datetime):
         error_list.append((deat[1], f'Error US01: Death date of {name} is after the current date.'))
 
-  for famId in sortedFamDict.keys():
-    famInfo = sortedFamDict[famId]
+  for famId in famDict.keys():
+    famInfo = famDict[famId]
 
     id = famId
     husbId = famInfo['husbId'][0]
@@ -283,20 +289,12 @@ def user_story_01(indDict, famDict):
   return error_list
 
 def user_story_02(indDict, famDict):
-  indIds = list(indDict.keys())
-  indIds.sort()
-  sortedIndDict = {i: indDict[i] for i in indIds}
-
-  familyIds = list(famDict.keys())
-  familyIds.sort()
-  sortedFamDict = {i: famDict[i] for i in familyIds}
-
   current_datetime = datetime.date(datetime.now())
 
   error_list = []
 
-  for famId in sortedFamDict.keys():
-    famInfo = sortedFamDict[famId]
+  for famId in famDict.keys():
+    famInfo = famDict[famId]
 
     id = famId
     husbId = famInfo['husbId'][0]
@@ -503,18 +501,10 @@ def user_story_08(indDict, famDict):
   return error_list
 
 def user_story_10(indDict, famDict):
-  indIds = list(indDict.keys())
-  indIds.sort()
-  sortedIndDict = {i: indDict[i] for i in indIds}
-
-  familyIds = list(famDict.keys())
-  familyIds.sort()
-  sortedFamDict = {i: famDict[i] for i in familyIds}
-
   error_list = []
 
-  for famId in sortedFamDict.keys():
-    famInfo = sortedFamDict[famId]
+  for famId in famDict.keys():
+    famInfo = famDict[famId]
 
     id = famId
     husbId = famInfo['husbId'][0]
@@ -537,7 +527,7 @@ def user_story_10(indDict, famDict):
       if (husb_bd[0] != 'N/A'):
         husb_bd_obj = datetime.strptime(husb_bd[0], '%d %b %Y').date()
 
-        age_at_marriage = marr_date_obj.year - husb_bd_obj.year - ((marr_date_obj.month, marr_date_obj.day) < (husb_bd_obj.month, husb_bd_obj.day))
+        age_at_marriage = get_age_at_time(husb_bd_obj, marr_date_obj)
 
         if (age_at_marriage < 14):
           error_list.append((marr_date[1], f'Error US10: {husb} was younger than 14 when he got married to {wife}.'))
@@ -545,7 +535,7 @@ def user_story_10(indDict, famDict):
       if (wife_bd[0] != 'N/A'):
         wife_bd_obj = datetime.strptime(wife_bd[0], '%d %b %Y').date()
 
-        age_at_marriage = marr_date_obj.year - wife_bd_obj.year - ((marr_date_obj.month, marr_date_obj.day) < (wife_bd_obj.month, wife_bd_obj.day))
+        age_at_marriage = get_age_at_time(wife_bd_obj, marr_date_obj)
 
         if (age_at_marriage < 14):
           error_list.append((marr_date[1], f'Error US10: {wife} was younger than 14 when she got married to {husb}.'))
@@ -645,6 +635,7 @@ if __name__ == "__main__":
     print("requires an argument (filename)")
 
   indDict, famDict = analyse_gedcom(sys.argv[1])
+  indDict, famDict = get_sorted_dicts(indDict, famDict)
   
   user_story_01_errors = user_story_01(indDict, famDict)
 
