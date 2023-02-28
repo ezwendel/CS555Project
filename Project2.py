@@ -8,6 +8,71 @@ from prettytable import PrettyTable
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+
+def birth_before_death_of_parents(families, individuals):
+    errors = []
+    for fam_id, family in families.items():
+        husband_id = family.get('HUSB', '')
+        wife_id = family.get('WIFE', '')
+        children = family.get('CHIL', [])
+
+        # Skip validation if husband or wife is not listed in family record
+        if isinstance(husband_id, int) or isinstance(wife_id, int):
+            continue
+
+        if husband_id not in individuals:
+            errors.append(f"ERROR: Family {fam_id}: Husband {husband_id} does not exist")
+        else:
+            husband = individuals[husband_id]
+            if husband.get('SEX') != 'M':
+                errors.append(f"ERROR: Family {fam_id}: Husband {husband_id} is not male")
+
+        if wife_id not in individuals:
+            errors.append(f"ERROR: Family {fam_id}: Wife {wife_id} does not exist")
+        else:
+            wife = individuals[wife_id]
+            if wife.get('SEX') != 'F':
+                errors.append(f"ERROR: Family {fam_id}: Wife {wife_id} is not female")
+
+        for child_id in children:
+            if child_id not in individuals:
+                errors.append(f"ERROR: Family {fam_id}: Child {child_id} does not exist")
+            else:
+                child = individuals[child_id]
+                if child.get('BIRT', '') and family.get('MARR', '') and child.get('BIRT', '') < family.get('MARR', ''):
+                    errors.append(f"ERROR: Family {fam_id}: Child {child_id} born before marriage")
+
+    return errors
+
+def output_results(individuals, families, errors):
+    # ... existing code to output individuals and families ...
+
+    if errors:
+        print("\nErrors:")
+        for error in errors:
+            print(error)
+
+
+def list_deceased(individuals):
+    deceased = []
+    for indi_id, indi in individuals.items():
+        if indi.get('DEAT', ''):
+            deceased.append(indi_id)
+    return deceased
+
+    
+def output_results(individuals, families, errors, deceased=None):
+    # ... existing code to output individuals and families ...
+
+    if deceased:
+        print("\nDeceased:")
+        for indi_id in deceased:
+            indi = individuals[indi_id]
+            name = f"{indi.get('NAME', 'unknown name')} ({indi_id})"
+            death_date = indi.get('DEAT', '')
+            print(f"{name}, died on {death_date}")
+
+
 def get_sorted_dicts(indDict, famDict):
   indIds = list(indDict.keys())
   indIds.sort()
@@ -631,9 +696,17 @@ def print_errors(error_list, out):
     out.write(f'Line {line_num}: {error[1]}\n')
 
 if __name__ == "__main__":
-  if len(sys.argv) != 2:
-    print("requires an argument (filename)")
 
+  if len(sys.argv) < 2:
+    print("requires an argument (filename)")
+  individuals, families = analyse_gedcom(sys.argv[1])
+  errors = []
+  #errors += validate_individuals(individuals)
+  errors += birth_before_death_of_parents(families, individuals)
+
+    # Call the new function to get the list of deceased individuals
+  deceased = list_deceased(individuals)
+  
   indDict, famDict = analyse_gedcom(sys.argv[1])
   indDict, famDict = get_sorted_dicts(indDict, famDict)
   
@@ -665,3 +738,4 @@ if __name__ == "__main__":
     print_errors(user_story_06_errors, out)
     print_errors(user_story_18_errors, out)
     print_errors(user_story_19_errors, out)
+
