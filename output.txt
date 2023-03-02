@@ -43,3 +43,9 @@ Families
 Errors
 Line 31: Error US01: Birth date of Moses Emmanuel is after the current date.
 Line 31: Error US02: Birth date of Moses Emmanuel is after the marriage date with Shana Brook.
+Line 31: ERROR US09: Family 4: Child 2 born after 9 months after the death date of father.
+
+Deceased:
+James Baldwin (7), died on 12 MAR 2007
+James Honzer (9), died on 19 OCT 2006
+Herschel James (12), died on 18 SEP 1980

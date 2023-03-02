@@ -12,35 +12,57 @@ from dateutil.relativedelta import relativedelta
 def birth_before_death_of_parents(families, individuals):
     errors = []
     for fam_id, family in families.items():
-        husband_id = family.get('HUSB', '')
-        wife_id = family.get('WIFE', '')
-        children = family.get('CHIL', [])
+        husband_id = family['husbId'][0]
+        wife_id = family['wifeId'][0]
+        children = family['chil']
+        
+        husb_line = family['husbId'][1]
+        wife_line = family['wifeId'][1]
+
+        husband = "N/A"
+        wife = "N/A"
 
         # Skip validation if husband or wife is not listed in family record
-        if isinstance(husband_id, int) or isinstance(wife_id, int):
+        if not isinstance(husband_id, int) or not isinstance(wife_id, int):
             continue
 
         if husband_id not in individuals:
-            errors.append(f"ERROR: Family {fam_id}: Husband {husband_id} does not exist")
+            errors.append((husb_line, f"ERROR: Family {fam_id}: Husband {husband_id} does not exist"))
         else:
             husband = individuals[husband_id]
-            if husband.get('SEX') != 'M':
-                errors.append(f"ERROR: Family {fam_id}: Husband {husband_id} is not male")
+            if husband['sex'][0] != 'M':
+                errors.append((husb_line, f"ERROR: Family {fam_id}: Husband {husband_id} is not male"))
 
         if wife_id not in individuals:
-            errors.append(f"ERROR: Family {fam_id}: Wife {wife_id} does not exist")
+            errors.append((wife_line, f"ERROR: Family {fam_id}: Wife {wife_id} does not exist"))
         else:
             wife = individuals[wife_id]
-            if wife.get('SEX') != 'F':
-                errors.append(f"ERROR: Family {fam_id}: Wife {wife_id} is not female")
+            if wife['sex'][0] != 'F':
+                errors.append((wife_line, f"ERROR: Family {fam_id}: Wife {wife_id} is not female"))
 
-        for child_id in children:
+        for chil in children:
+            child_id = chil[0]
+            chil_line = chil[1]
             if child_id not in individuals:
-                errors.append(f"ERROR: Family {fam_id}: Child {child_id} does not exist")
+                errors.append((chil_line, f"ERROR: Family {fam_id}: Child {child_id} does not exist"))
             else:
                 child = individuals[child_id]
-                if child.get('BIRT', '') and family.get('MARR', '') and child.get('BIRT', '') < family.get('MARR', ''):
-                    errors.append(f"ERROR: Family {fam_id}: Child {child_id} born before marriage")
+                child_birth_date = datetime.strptime(child['birt'][0], '%d %b %Y').date()
+                child_birth_line = child['birt'][1]
+                
+                if (husband != "N/A"):
+                  husb_deat = husband['deat'][0]
+                  if (husb_deat != "N/A"):
+                    husb_deat_date_plus_nine_months = (datetime.strptime(husb_deat, '%d %b %Y') + relativedelta(months = 9)).date()
+                    if (child_birth_date > husb_deat_date_plus_nine_months):
+                      errors.append((child_birth_line, f"ERROR US09: Family {fam_id}: Child {child_id} born after 9 months after the death date of father."))
+                
+                if (wife != "N/A"):
+                  wife_deat = wife['deat'][0]
+                  if (wife_deat != "N/A"):
+                    wife_deat_date = datetime.strptime(husb_deat, '%d %b %Y').date()
+                    if (child_birth_date > wife_deat_date):
+                      errors.append((child_birth_line, f"ERROR US09: Family {fam_id}: Child {child_id} born after 9 months after the death date of mother."))
 
     return errors
 
@@ -56,21 +78,23 @@ def output_results(individuals, families, errors):
 def list_deceased(individuals):
     deceased = []
     for indi_id, indi in individuals.items():
-        if indi.get('DEAT', ''):
+        if indi.get('deat')[0] != "N/A":
             deceased.append(indi_id)
     return deceased
 
     
-def output_results(individuals, families, errors, deceased=None):
+def output_results(individuals, families, errors, out, deceased=None):
     # ... existing code to output individuals and families ...
 
     if deceased:
         print("\nDeceased:")
+        out.write("\nDeceased:")
         for indi_id in deceased:
             indi = individuals[indi_id]
-            name = f"{indi.get('NAME', 'unknown name')} ({indi_id})"
-            death_date = indi.get('DEAT', '')
-            print(f"{name}, died on {death_date}")
+            name = f"{indi.get('name', 'unknown name')[0]} ({indi_id})"
+            death_date = indi.get('deat', '')
+            print(f"{name}, died on {death_date[0]}")
+            out.write(f"\n{name}, died on {death_date[0]}")
 
 
 def get_sorted_dicts(indDict, famDict):
@@ -205,7 +229,7 @@ def analyse_gedcom(name = "gedcomfile.ged"):
           div = "N/A"
           children = []
 
-          idEntry = (int(husbId[0]), idx+1)
+          idEntry = (int(num[0]), idx+1)
           husbIdEntry = (int(husbId[0]), idx+2)
           wifeIdEntry = (int(wifeId[0]), idx+3)
           marrEntry = (marr, 0)
@@ -722,6 +746,14 @@ if __name__ == "__main__":
 
   user_story_06_errors = user_story_06(indDict, famDict)
 
+  user_story_07_errors = user_story_07(indDict, famDict)
+
+  user_story_08_errors = user_story_08(indDict, famDict)
+
+  user_story_09_errors = birth_before_death_of_parents(famDict, indDict)
+
+  user_story_10_errors = user_story_10(indDict, famDict)
+
   user_story_18_errors = user_story_18(indDict, famDict)
 
   user_story_19_errors = user_story_19(indDict, famDict)
@@ -736,6 +768,11 @@ if __name__ == "__main__":
     print_errors(user_story_04_errors, out)
     print_errors(user_story_05_errors, out)
     print_errors(user_story_06_errors, out)
+    print_errors(user_story_07_errors, out)
+    print_errors(user_story_08_errors, out)
+    print_errors(user_story_09_errors, out)
+    print_errors(user_story_10_errors, out)
     print_errors(user_story_18_errors, out)
     print_errors(user_story_19_errors, out)
+    output_results(indDict, famDict, errors, out, deceased)
 

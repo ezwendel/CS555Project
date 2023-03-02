@@ -162,6 +162,16 @@ class TestUseCases(unittest.TestCase):
 
     self.assertListEqual(expected_errors, actual_errors)
 
+  def test_US09(self):
+    expected_errors = [
+      (49, 'ERROR US09: Family 2: Child 4 born after 9 months after the death date of father.')
+    ]
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US09_pardeatbeforebirt.ged')
+    actual_errors = p2.birth_before_death_of_parents(famDict, indDict)
+
+    self.assertListEqual(expected_errors, actual_errors)
+
   def test_US10(self):
     expected_errors = []
 
@@ -179,6 +189,20 @@ class TestUseCases(unittest.TestCase):
     actual_errors = p2.user_story_10(indDict, famDict)
 
     self.assertListEqual(expected_errors, actual_errors)
+
+  def test_US29(self):
+    expected_out = '\nDeceased:\nUndead Guy (1), died on 2 MAR 2019'
+
+    out = io.StringIO("")
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\undead.ged')
+    deceased = p2.list_deceased(indDict)
+
+    p2.output_results(indDict, famDict, [], out, deceased)
+
+    actual_out = str(out.getvalue())
+
+    self.assertEqual(expected_out, actual_out)
   
   def test_undead_US40(self):
     expected_out = str('Line 22: Error US06: Death date of Undead Guy is before the divorce date with Normal Person.\n')
