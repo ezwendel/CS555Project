@@ -4,6 +4,8 @@
 
 import sys
 import re
+import time
+import math
 from prettytable import PrettyTable
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -111,6 +113,9 @@ def get_sorted_dicts(indDict, famDict):
 def get_age_at_time(birth_date, time_to_compare):
   return time_to_compare.year - birth_date.year - ((time_to_compare.month, time_to_compare.day) < (birth_date.month, birth_date.day))
 
+def get_age_at_time_in_dec(birth_date, time_to_compare):
+  return (time_to_compare - birth_date).total_seconds() / 31556926
+
 def birth_before_death(indDict):
     error_list = []
 
@@ -160,6 +165,7 @@ def analyse_gedcom(name = "gedcomfile.ged"):
   for idx, line in enumerate(lines):
     line = line.strip()
     parts = line.split(" ")
+    current_datetime = datetime.date(datetime.now())
 
     if (len(parts) >= 3):  
       if (parts[2] == "INDI"):
@@ -177,10 +183,13 @@ def analyse_gedcom(name = "gedcomfile.ged"):
           sex = "N/A"
           birt = "N/A"
           deat = "N/A"
+          # USER STORY 27
+          age = "N/A"
 
           sexEntry = ("N/A", 0)
           birtEntry = ("N/A", 0)
           deatEntry = ("N/A", 0)
+          ageEntry = (age, 0)
 
           for i in range(idx + 2, len(lines)):
             currLine = lines[i].strip()
@@ -210,7 +219,19 @@ def analyse_gedcom(name = "gedcomfile.ged"):
                 birt = " ".join(newLineParts[2:]).strip()
                 birtEntry = (birt, i+1)
 
-          entry = {'id': idEntry, 'name': nameEntry, 'sex': sexEntry, 'deat': deatEntry, 'birt': birtEntry}
+                # USER STORY 28
+                
+          if (birt != "N/A"):
+            birt_object = datetime.strptime(birt, '%d %b %Y').date()
+            age = 0
+            if (deat == "N/A"):
+              age = get_age_at_time_in_dec(birt_object, current_datetime)
+            else:
+              deat_object = datetime.strptime(deat, '%d %b %Y').date()
+              age = get_age_at_time_in_dec(birt_object, deat_object)
+            ageEntry = (age, birtEntry[1])
+
+          entry = {'id': idEntry, 'name': nameEntry, 'sex': sexEntry, 'deat': deatEntry, 'birt': birtEntry, 'age': ageEntry}
               
           indDict[int(num[0])] = entry
             
@@ -280,7 +301,7 @@ def print_ged_tables(indDict, famDict, outfile):
   sortedFamDict = {i: famDict[i] for i in familyIds}
 
   indTable = PrettyTable()
-  indTable.field_names = ["Individual Id", "Name", "Sex", "Birthday", "Death Date"]
+  indTable.field_names = ["Individual Id", "Name", "Sex", "Birthday", "Death Date", "Age"]
 
   famTable = PrettyTable()
   famTable.field_names = ["Family Id", "Husband", "Wife", "Marriage Date", "Divorce Date", "Children"]
@@ -293,8 +314,9 @@ def print_ged_tables(indDict, famDict, outfile):
     sex = indInfo['sex'][0]
     birt = indInfo['birt'][0]
     deat = indInfo['deat'][0]
+    age = math.floor(indInfo['age'][0])
 
-    indTable.add_row([id, name, sex, birt, deat])
+    indTable.add_row([id, name, sex, birt, deat, age])
 
   for fam in sortedFamDict.keys():
     famInfo = sortedFamDict[fam]
@@ -310,12 +332,13 @@ def print_ged_tables(indDict, famDict, outfile):
     wife = indDict[wifeId]['name'][0]
     chil = []
 
-
     for child in children:
       childId = child[0]
-      chil.append(indDict[childId]['name'][0])
+      chil.append(indDict[childId]['id'][0])
+    
+    sorted_siblings = user_story_28(indDict, chil)
 
-    famTable.add_row([id, husb, wife, marr, div, chil])
+    famTable.add_row([id, husb, wife, marr, div, sorted_siblings])
 
   print('Individuals')
   print(indTable)
@@ -710,6 +733,25 @@ def user_story_19(indDict, famDict):
       if (sorted(cousin_pair) == sorted((husbId, wifeId))):
         error_list.append((line, f'Error US19: Cousins {husb} and {wife} should not be married.'))
   return error_list
+
+def user_story_28(indDict, siblings):
+
+  siblings_with_age = []
+
+  for sibling in siblings:
+    siblingEntry = indDict[sibling]
+    name = siblingEntry['name'][0]
+    age = siblingEntry['age'][0]
+
+    siblings_with_age.append((name, age))
+
+  siblings_with_age.sort(key=lambda x: -x[1])
+  siblings_names_only = []
+
+  for sibling in siblings_with_age:
+    siblings_names_only.append(sibling[0])
+
+  return siblings_names_only
 
 def print_errors(error_list, out):
   for error in error_list:

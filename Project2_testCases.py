@@ -1,6 +1,8 @@
 import unittest
 import sys
 import io
+import datetime
+import math
 
 import Project2 as p2
 
@@ -231,6 +233,32 @@ class TestUseCases(unittest.TestCase):
     actual_out = str(out.getvalue())
 
     self.assertEqual(expected_out, actual_out)
+
+  def test_us_27_28_US27(self):
+    sample_date = datetime.date(2022, 4, 2)
+    firstborn_age = 24
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\us_27_28.ged')
+    
+    self.assertEqual(firstborn_age, math.floor(indDict[5]['age'][0]))
+
+  def test_us_27_28_US28(self):
+    sample_date = datetime.date(2022, 4, 2)
+    expected_order = ['First Born', 'Second Born', 'Third Born']
+
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\us_27_28.ged')
+    
+    children = famDict[1]['chil']
+
+    chil = []
+
+    for child in children:
+      childId = child[0]
+      chil.append(indDict[childId]['id'][0])
+
+    actual_out = p2.user_story_28(indDict, chil)
+
+    self.assertEqual(expected_order, actual_out)
 
 if __name__ == '__main__':
     unittest.main()
