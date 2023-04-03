@@ -753,6 +753,67 @@ def user_story_28(indDict, siblings):
 
   return siblings_names_only
 
+def user_story_32(indDict, famDict):
+    indIds = list(indDict.keys())
+    indIds.sort()
+
+    familyIds = list(famDict.keys())
+    familyIds.sort()
+    sortedFamDict = {i: famDict[i] for i in familyIds}
+
+    multiple_births_list = []
+
+    for famId in sortedFamDict.keys():
+      famInfo = sortedFamDict[famId]
+
+      wifeId = famInfo['wifeId'][0]
+
+      wife = indDict[wifeId]['name'][0]
+
+      chilInfo = famInfo['chil']
+
+      if (len(chilInfo) > 1):
+        multiple_births_list.append(wife)
+      
+    return multiple_births_list
+
+def user_story_33(indDict, famDict):
+  indIds = list(indDict.keys())
+  indIds.sort()
+
+  familyIds = list(famDict.keys())
+  familyIds.sort()
+  sortedFamDict = {i: famDict[i] for i in familyIds}
+
+  current_datetime = datetime.date(datetime.now())
+
+  orphan_list = []
+
+  for famId in sortedFamDict.keys():
+    famInfo = sortedFamDict[famId]
+
+    husbId = famInfo['husbId'][0]
+    wifeId = famInfo['wifeId'][0]
+
+    husb_deat = indDict[husbId]['deat'][0]
+    wife_deat = indDict[wifeId]['deat'][0]
+
+    chilInfo = famInfo['chil']
+
+    if (husb_deat != "N/A" or wife_deat != "N/A"):
+
+      for chil in chilInfo:
+        chilId = chil[0]
+        child = indDict[chilId]['name'][0]
+        birt = indDict[chilId]['birt']
+        birt_object = datetime.strptime(birt[0], '%d %b %Y').date()
+        age = get_age_at_time(birt_object, current_datetime)
+
+        if (age < 18):
+          orphan_list.append(child)
+
+  return orphan_list
+
 def print_errors(error_list, out):
   for error in error_list:
     # USER STORY 40:
