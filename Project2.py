@@ -800,7 +800,7 @@ def user_story_33(indDict, famDict):
 
     chilInfo = famInfo['chil']
 
-    if (husb_deat != "N/A" or wife_deat != "N/A"):
+    if (husb_deat != "N/A" and wife_deat != "N/A"):
 
       for chil in chilInfo:
         chilId = chil[0]
