@@ -260,5 +260,21 @@ class TestUseCases(unittest.TestCase):
 
     self.assertEqual(expected_order, actual_out)
 
+  def test_US32(self):
+      expected_out = ['Multiple Birth']
+
+      indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US32_multiplebirths.ged')
+      actual_out = p2.user_story_32(indDict, famDict)
+
+      self.assertListEqual(expected_out, actual_out)
+
+  def test_US33(self):
+      expected_out = ['First Orphan', 'Second Orphan']
+
+      indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US33_orphans.ged')
+      actual_out = p2.user_story_33(indDict, famDict)
+
+      self.assertListEqual(expected_out, actual_out)
+
 if __name__ == '__main__':
     unittest.main()
