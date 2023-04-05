@@ -8,6 +8,16 @@ import Project2 as p2
 
 class TestUseCases(unittest.TestCase):
 
+  def test_list_living_married():
+    expected_errors= []
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US01_farnsworth.ged')
+    actual_errors = p2.user_story_01(indDict, famDict)
+
+  def test_list_living_single():
+    expected_errors = []
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US01_farnsworth.ged')
+    actual_errors = p2.user_story_01(indDict, famDict)
+
   def test_farnsworth_US01(self):
     expected_errors = [
       (20, 'Error US01: Birth date of Hubert Farnsworth is after the current date.'),

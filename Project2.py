@@ -132,6 +132,19 @@ def birth_before_death(indDict):
     
     return error_list
 
+def list_living_married(people):
+    living_married = []
+    for name, info in people.items():
+        if info.get("alive") and info.get("spouse") and info.get("spouse") in people and people[info["spouse"]].get("alive"):
+            living_married.append(name)
+    return living_married
+
+def list_living_single(people):
+    living_single = []
+    for person in people.items():
+        if person.is_alive() and not person.is_married() and person.get_age() > 30:
+            living_single.append(person)
+    return living_single
 
 def marriage_before_divorce(famDict):
     error_list = []
