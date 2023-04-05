@@ -8,15 +8,21 @@ import Project2 as p2
 
 class TestUseCases(unittest.TestCase):
 
-  def test_list_living_married():
-    expected_errors= []
-    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US01_farnsworth.ged')
-    actual_errors = p2.user_story_01(indDict, famDict)
+  def test_list_living_married(self):
+    expected_list= ['Mom Ent', 'Dad Par']
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US30_US31.ged')
+    actual_list = p2.list_living_married(indDict, famDict)
 
-  def test_list_living_single():
-    expected_errors = []
-    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US01_farnsworth.ged')
-    actual_errors = p2.user_story_01(indDict, famDict)
+    self.assertCountEqual(expected_list, actual_list)
+
+
+  def test_list_living_single(self):
+    expected_list = ['First Born']
+    indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US30_US31.ged')
+    actual_list = p2.list_living_single(indDict, famDict)
+
+    self.assertCountEqual(expected_list, actual_list)
+
 
   def test_farnsworth_US01(self):
     expected_errors = [

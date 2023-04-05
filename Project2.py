@@ -132,18 +132,65 @@ def birth_before_death(indDict):
     
     return error_list
 
-def list_living_married(people):
+def list_living_married(indDict, famDict):
     living_married = []
-    for name, info in people.items():
-        if info.get("alive") and info.get("spouse") and info.get("spouse") in people and people[info["spouse"]].get("alive"):
-            living_married.append(name)
+    for fam_id, family in famDict.items():
+      husbId = family['husbId'][0]
+      wifeId = family['wifeId'][0]
+      marr = family['marr'][0]
+      div = family['div'][0]
+
+      if (marr != "N/A" and div == "N/A"):
+        husbDeat = indDict[husbId]['deat'][0]
+        wifeDeat = indDict[wifeId]['deat'][0]
+
+        if (husbDeat == "N/A" and wifeDeat == "N/A"):
+          living_married.append(indDict[husbId]['name'][0])
+          living_married.append(indDict[wifeId]['name'][0])
+
     return living_married
 
-def list_living_single(people):
+def list_living_married_ids(indDict, famDict):
+    living_married = []
+    for fam_id, family in famDict.items():
+      husbId = family['husbId'][0]
+      wifeId = family['wifeId'][0]
+      marr = family['marr'][0]
+      div = family['div'][0]
+
+      if (marr != "N/A" and div == "N/A"):
+        husbDeat = indDict[husbId]['deat'][0]
+        wifeDeat = indDict[wifeId]['deat'][0]
+
+        if (husbDeat == "N/A" and wifeDeat == "N/A"):
+          living_married.append(husbId)
+          living_married.append(wifeId)
+
+    return living_married
+
+def list_living_single(indDict, famDict):
     living_single = []
-    for person in people.items():
-        if person.is_alive() and not person.is_married() and person.get_age() > 30:
-            living_single.append(person)
+    
+    living_married_ids = list_living_married_ids(indDict, famDict)
+    
+    current_datetime = datetime.date(datetime.now())
+
+    for indId in indDict.keys():
+      if (indId in living_married_ids):
+        continue
+
+      indInfo = indDict[indId]
+
+      id = indId
+      name = indInfo['name'][0]
+      birt = indInfo['birt'][0]
+      deat = indInfo['deat'][0]
+
+      birt_date = datetime.strptime(birt, '%d %b %Y').date()
+      age = get_age_at_time(birt_date, current_datetime)
+      if (age > 30 and deat):
+        living_single.append(name)
+
     return living_single
 
 def marriage_before_divorce(famDict):
@@ -835,6 +882,19 @@ def print_errors(error_list, out):
     print(f'Line {line_num}: {error[1]}')
     out.write(f'Line {line_num}: {error[1]}\n')
 
+def print_list(header, data_list, out):
+  print(header)
+  out.write(header + '\n')
+
+  if len(data_list) == 0:
+    print('None')
+    out.write(f'None\n')
+
+  for data in data_list:
+    
+    print(f'{data}')
+    out.write(f'{data}\n')
+
 if __name__ == "__main__":
 
   if len(sys.argv) < 2:
@@ -874,6 +934,14 @@ if __name__ == "__main__":
 
   user_story_19_errors = user_story_19(indDict, famDict)
 
+  user_story_30_list = list_living_married(indDict, famDict)
+
+  user_story_31_list = list_living_single(indDict, famDict)
+
+  user_story_32_list = user_story_32(indDict, famDict)
+  
+  user_story_33_list = user_story_33(indDict, famDict)
+
   with open('output.txt', 'w') as out:
     print_ged_tables(indDict, famDict, out)
     print('Errors')
@@ -891,4 +959,14 @@ if __name__ == "__main__":
     print_errors(user_story_18_errors, out)
     print_errors(user_story_19_errors, out)
     output_results(indDict, famDict, errors, out, deceased)
+    out.write("\n\n")
+    print_list("Living Married (US30):", user_story_30_list, out)
+    out.write("\n")
+    print_list("Living Single (US31):",user_story_31_list, out)
+    out.write("\n")
+    print_list("Multiple Births (US32):",user_story_32_list, out)
+    out.write("\n")
+    print_list("Orphans (US33):",user_story_33_list, out)
+    out.write("\n")
+
 
