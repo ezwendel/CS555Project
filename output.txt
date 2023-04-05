@@ -1,11 +1,30 @@
 Individuals
-+---------------+-------------------+-----+------------+-------------+
-| Individual Id |        Name       | Sex |  Birthday  |  Death Date |
-+---------------+-------------------+-----+------------+-------------+
-|       1       | Hubert Farnsworth |  M  | 9 APR 2841 |     N/A     |
-|       2       |   Ned Farnsworth  |  M  | 5 JUL 2797 | 11 MAR 2904 |
-|       3       |    Velma Bolton   |  F  | 8 JUL 2803 |     N/A     |
-+---------------+-------------------+-----+------------+-------------+
++---------------+------------------+-----+-------------+-------------+
+| Individual Id |       Name       | Sex |   Birthday  |  Death Date |
++---------------+------------------+-----+-------------+-------------+
+|       1       |  Elijah Wendel   |  M  |  8 FEB 2000 |     N/A     |
+|       2       |  Moses Emmanuel  |  M  | 24 DEC 2078 |     N/A     |
+|       3       |   Shana Brook    |  F  | 21 DEC 1985 |     N/A     |
+|       4       | Shannon Baldwin  |  F  |  3 MAY 1978 |     N/A     |
+|       5       |   Chris Madara   |  M  |  6 APR 1985 |     N/A     |
+|       6       |  Melissa Manzo   |  F  | 31 DEC 1979 |     N/A     |
+|       7       |  James Baldwin   |  M  |  4 JUN 1948 | 12 MAR 2007 |
+|       8       |     Pat Dwan     |  F  | 16 JUN 1952 |     N/A     |
+|       9       |   James Honzer   |  M  | 23 SEP 1947 | 19 OCT 2006 |
+|       10      |    Jay Bortz     |  M  | 24 AUG 1978 |     N/A     |
+|       11      |   Azlee Madara   |  F  |  6 FEB 2013 |     N/A     |
+|       12      |  Herschel James  |  M  | 14 AUG 1935 | 18 SEP 1980 |
+|       13      | Doranna Emmanuel |  F  |  7 JAN 1937 |     N/A     |
+|       14      |   Bruce Wendel   |  M  |  5 SEP 1940 |     N/A     |
+|       15      |   Isaiah Manzo   |  M  | 22 DEC 2004 |     N/A     |
+|       16      |    Zev Wendel    |  M  |  6 JUN 2010 |     N/A     |
+|       17      |   Nina Wendel    |  F  | 15 MAY 2014 |     N/A     |
+|       18      |   Colin Mills    |  M  | 14 SEP 1980 |     N/A     |
+|       19      |    Remi Manzo    |  M  | 18 NOV 2002 |     N/A     |
+|       20      |   Lily Wendel    |  F  | 28 DEC 1984 |     N/A     |
+|       21      |    Zoe Wendel    |  F  | 15 NOV 1987 |     N/A     |
+|       22      |  Olivia Wendel   |  F  | 15 NOV 1987 |     N/A     |
++---------------+------------------+-----+-------------+-------------+
 Families
 +-----------+----------------+--------------+---------------+--------------+-----------------------+
 | Family Id |    Husband     |     Wife     | Marriage Date | Divorce Date |        Children       |
@@ -13,9 +32,10 @@ Families
 |     1     | Ned Farnsworth | Velma Bolton |  16 OCT 2828  | 27 JAN 2861  | ['Hubert Farnsworth'] |
 +-----------+----------------+--------------+---------------+--------------+-----------------------+
 Errors
-Error US01: Birth date of Hubert Farnsworth is after the current date.
-Error US01: Birth date of Ned Farnsworth is after the current date.
-Error US01: Death date of Ned Farnsworth is after the current date.
-Error US01: Birth date of Velma Bolton is after the current date.
-Error US01: Marriage date of Ned Farnsworth and Velma Bolton is after the current date.
-Error US01: Divorce date of Ned Farnsworth and Velma Bolton is after the current date.
+Error US01: Birth date of Moses Emmanuel is after the current date.
+Error US02: Birth date of Moses Emmanuel is after the marriage date with Shana Brook.
+
+Deceased:
+James Baldwin (7), died on 12 MAR 2007
+James Honzer (9), died on 19 OCT 2006
+Herschel James (12), died on 18 SEP 1980

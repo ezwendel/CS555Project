@@ -1,0 +1,49 @@
+0 HEAD
+1 SOUR Family Echo
+2 WWW http://www.familyecho.com/
+1 FILE Family 9
+1 DATE 3 APR 2023
+1 DEST ANSTFILE
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 SUBM @I1@
+2 NAME
+1 SUBN
+1 CHAR UTF-8
+0 @I1@ INDI
+1 NAME Multiple /Birth/
+2 GIVN Multiple
+2 SURN Birth
+2 _MARNM Birth
+1 SEX F
+1 FAMS @F1@
+0 @I2@ INDI
+1 NAME Husband /Birth/
+2 GIVN Husband
+2 SURN Birth
+2 _MARNM Birth
+1 SEX M
+1 FAMS @F1@
+0 @I3@ INDI
+1 NAME One /Birth/
+2 GIVN One
+2 SURN Birth
+2 _MARNM Birth
+1 SEX M
+1 FAMC @F1@
+0 @I4@ INDI
+1 NAME Two /Birth/
+2 GIVN Two
+2 SURN Birth
+2 _MARNM Birth
+1 SEX F
+1 FAMC @F1@
+0 @F1@ FAM
+1 HUSB @I2@
+1 WIFE @I1@
+1 CHIL @I3@
+1 CHIL @I4@
+1 _CURRENT Y
+1 _PRIMARY Y
+0 TRLR

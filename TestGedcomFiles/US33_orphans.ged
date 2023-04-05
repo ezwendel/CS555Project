@@ -1,0 +1,67 @@
+0 HEAD
+1 SOUR Family Echo
+2 WWW http://www.familyecho.com/
+1 FILE Family 10
+1 DATE 3 APR 2023
+1 DEST ANSTFILE
+1 GEDC
+2 VERS 5.5.1
+2 FORM LINEAGE-LINKED
+1 SUBM @I1@
+2 NAME 
+1 SUBN
+1 CHAR UTF-8
+0 @I1@ INDI
+1 NAME Wife /Orphan/
+2 GIVN Wife
+2 SURN Orphan
+2 _MARNM Orphan
+1 SEX F
+1 DEAT Y
+2 DATE 8 MAR 2020
+1 FAMS @F1@
+0 @I2@ INDI
+1 NAME Husband /Orphan/
+2 GIVN Husband
+2 SURN Orphan
+2 _MARNM Orphan
+1 SEX M
+1 DEAT Y
+2 DATE 9 MAY 2010
+1 FAMS @F1@
+0 @I3@ INDI
+1 NAME First /Orphan/
+2 GIVN First
+2 SURN Orphan
+2 _MARNM Orphan
+1 SEX F
+1 BIRT
+2 DATE 2 APR 2008
+1 FAMC @F1@
+0 @I4@ INDI
+1 NAME Second /Orphan/
+2 GIVN Second
+2 SURN Orphan
+2 _MARNM Orphan
+1 SEX M
+1 BIRT
+2 DATE 2 MAR 2010
+1 FAMC @F1@
+0 @I5@ INDI
+1 NAME Not /Orphan/
+2 GIVN Not
+2 SURN Orphan
+2 _MARNM Orphan
+1 SEX M
+1 BIRT
+2 DATE 3 OCT 2000
+1 FAMC @F1@
+0 @F1@ FAM
+1 HUSB @I2@
+1 WIFE @I1@
+1 CHIL @I3@
+1 CHIL @I4@
+1 CHIL @I5@
+1 _CURRENT Y
+1 _PRIMARY Y
+0 TRLR
