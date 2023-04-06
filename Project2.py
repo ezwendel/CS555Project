@@ -186,9 +186,12 @@ def list_living_single(indDict, famDict):
       birt = indInfo['birt'][0]
       deat = indInfo['deat'][0]
 
+      
+
       birt_date = datetime.strptime(birt, '%d %b %Y').date()
       age = get_age_at_time(birt_date, current_datetime)
-      if (age > 30 and deat):
+      
+      if (age > 30 and deat == "N/A"):
         living_single.append(name)
 
     return living_single
