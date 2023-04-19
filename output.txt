@@ -6,7 +6,7 @@ Individuals
 |       2       |  Moses Emmanuel  |  M  | 24 DEC 2078 |     N/A     | -56 |
 |       3       |   Shana Brook    |  F  | 21 DEC 1985 |     N/A     |  37 |
 |       4       | Shannon Baldwin  |  F  |  3 MAY 1978 |     N/A     |  44 |
-|       5       |   Chris Madara   |  M  |  6 APR 1985 |     N/A     |  37 |
+|       5       |   Chris Madara   |  M  |  6 APR 1985 |     N/A     |  38 |
 |       6       |  Melissa Manzo   |  F  | 31 DEC 1979 |     N/A     |  43 |
 |       7       |  James Baldwin   |  M  |  4 JUN 1948 | 12 MAR 2007 |  58 |
 |       8       |     Pat Dwan     |  F  | 16 JUN 1952 |     N/A     |  70 |
@@ -72,5 +72,12 @@ Shana Brook
 Doranna Emmanuel
 
 Orphans (US33):
+None
+
+Birthdays within 30 days (US38):
+Shannon Baldwin, 3 MAY 1978
+Nina Wendel, 15 MAY 2014
+
+Anniversaries within 30 days (US39):
 None
 

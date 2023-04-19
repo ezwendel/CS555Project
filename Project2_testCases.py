@@ -292,5 +292,25 @@ class TestUseCases(unittest.TestCase):
 
       self.assertListEqual(expected_out, actual_out)
 
+  def test_US38(self):
+      sample_date = datetime.date(2022, 4, 18)
+      
+      expected_out = ['Mom Pater, 5 MAY 1980', 'Son Par, 2 MAY 2011']
+
+      indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US_38-39_test.ged')
+      actual_out = p2.user_story_38(indDict, sample_date)
+
+      self.assertCountEqual(expected_out, actual_out)
+
+  def test_US39(self):
+      sample_date = datetime.date(2022, 4, 18)
+      
+      expected_out = ['Dad Par & Mom Pater, 19 APR 2010']
+
+      indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US_38-39_test.ged')
+      actual_out = p2.user_story_39(indDict, famDict, sample_date)
+
+      self.assertCountEqual(expected_out, actual_out)
+
 if __name__ == '__main__':
     unittest.main()

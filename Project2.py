@@ -116,6 +116,15 @@ def get_age_at_time(birth_date, time_to_compare):
 def get_age_at_time_in_dec(birth_date, time_to_compare):
   return (time_to_compare - birth_date).total_seconds() / 31556926
 
+def next_anni_after(anni_date, curr_date):
+  while (anni_date < curr_date):
+    anni_date += relativedelta(years=1)
+  return anni_date
+
+def within_30_days(date, current_datetime):
+  days = (next_anni_after(date, current_datetime) - current_datetime).total_seconds() / 86400
+  return days < 30 and days >= 0
+
 def birth_before_death(indDict):
     error_list = []
 
@@ -877,6 +886,50 @@ def user_story_33(indDict, famDict):
 
   return orphan_list
 
+def user_story_38(indDict, curr_date):
+  
+  upcoming_bdays = []
+
+  for indId in indDict.keys():
+    indInfo = indDict[indId]
+
+    birt = indInfo['birt'][0]
+    deat = indInfo['deat'][0]
+    name = indInfo['name'][0]
+
+    if (birt != 'N/A' and deat == "N/A"):
+      birt_object = datetime.strptime(birt, '%d %b %Y').date()
+      if (within_30_days(birt_object, curr_date)):
+        upcoming_bdays.append(f'{name}, {birt}')
+
+  return upcoming_bdays
+
+def user_story_39(indDict, famDict, curr_date):
+  
+  upcoming_annis = []
+
+  for famId in famDict.keys():
+    famInfo = famDict[famId]
+    
+    husbId = famInfo['husbId'][0]
+    wifeId = famInfo['wifeId'][0]
+
+    husbName = indDict[husbId]['name'][0]
+    wifeName = indDict[wifeId]['name'][0]
+
+    husbDeat = indDict[husbId]['deat'][0]
+    wifeDeat = indDict[wifeId]['deat'][0]
+
+    marr = famInfo['marr'][0]
+    div = famInfo['div'][0]
+
+    if (marr != 'N/A' and div == "N/A" and husbDeat == "N/A" and wifeDeat == "N/A"):
+      marr_object = datetime.strptime(marr, '%d %b %Y').date()
+      if (within_30_days(marr_object, curr_date)):
+        upcoming_annis.append(f'{husbName} & {wifeName}, {marr}')
+
+  return upcoming_annis
+
 def print_errors(error_list, out):
   for error in error_list:
     # USER STORY 40:
@@ -945,6 +998,10 @@ if __name__ == "__main__":
   
   user_story_33_list = user_story_33(indDict, famDict)
 
+  user_story_38_list = user_story_38(indDict, datetime.now().date())
+
+  user_story_39_list = user_story_39(indDict, famDict, datetime.now().date())
+
   with open('output.txt', 'w') as out:
     print_ged_tables(indDict, famDict, out)
     print('Errors')
@@ -970,6 +1027,10 @@ if __name__ == "__main__":
     print_list("Multiple Births (US32):",user_story_32_list, out)
     out.write("\n")
     print_list("Orphans (US33):",user_story_33_list, out)
+    out.write("\n")
+    print_list("Birthdays within 30 days (US38):",user_story_38_list, out)
+    out.write("\n")
+    print_list("Anniversaries within 30 days (US39):",user_story_39_list, out)
     out.write("\n")
 
 
