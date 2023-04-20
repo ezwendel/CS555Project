@@ -292,6 +292,23 @@ class TestUseCases(unittest.TestCase):
 
       self.assertListEqual(expected_out, actual_out)
 
+  def test_US34(self):
+      expected_out = [('More ThanTwice', 'Wife ThanTwice')]
+
+      indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US34_twiceage.ged')
+      actual_out = p2.user_story_34(indDict, famDict)
+
+      self.assertListEqual(expected_out, actual_out)
+
+  def test_US35(self):
+      expected_out = ['Within ThirtyDays']
+
+      indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US35_recentbirths.ged')
+      actual_out = p2.user_story_35(indDict, famDict)
+
+      self.assertListEqual(expected_out, actual_out)
+
+
   def test_US38(self):
       sample_date = datetime.date(2022, 4, 18)
       
