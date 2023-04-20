@@ -886,6 +886,61 @@ def user_story_33(indDict, famDict):
 
   return orphan_list
 
+def user_story_34(indDict, famDict):
+    indIds = list(indDict.keys())
+    indIds.sort()
+
+    familyIds = list(famDict.keys())
+    familyIds.sort()
+    sortedFamDict = {i: famDict[i] for i in familyIds}
+
+    large_age_diff_list = []
+
+    for famId in sortedFamDict.keys():
+      famInfo = sortedFamDict[famId]
+
+      husbId = famInfo['husbId'][0]
+      wifeId = famInfo['wifeId'][0]
+
+      husband = indDict[husbId]['name'][0]
+      wife = indDict[wifeId]['name'][0]
+
+      marr = famInfo['marr'][0]
+
+      if (marr != "N/A"):
+        marr_object = datetime.strptime(marr, '%d %b %Y').date()
+
+        husb_birt = indDict[husbId]['birt']
+        husb_birt_object = datetime.strptime(husb_birt[0], '%d %b %Y').date()
+        husb_age = get_age_at_time(husb_birt_object, marr_object)
+
+        wife_birt = indDict[wifeId]['birt']
+        wife_birt_object = datetime.strptime(wife_birt[0], '%d %b %Y').date()
+        wife_age = get_age_at_time(wife_birt_object, marr_object)
+
+        if (husb_age > 2 * wife_age or wife_age > 2 * husb_age):
+          large_age_diff_list.append((husband, wife))
+          
+    return large_age_diff_list
+
+def user_story_35(indDict, famDict):
+  for indId in indDict.keys():
+    indInfo = indDict[indId]
+
+    birt = indInfo['birt'][0]
+    name = indInfo['name'][0]
+
+    current_datetime = datetime.date(datetime.now())
+
+    recent_births_list = []
+
+    if (birt != 'N/A'):
+      birt_object = datetime.strptime(birt, '%d %b %Y').date()
+      if (within_30_days(birt_object, current_datetime)):
+        recent_births_list.append(name)
+
+  return recent_births_list
+
 def user_story_38(indDict, curr_date):
   
   upcoming_bdays = []
