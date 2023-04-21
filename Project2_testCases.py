@@ -301,13 +301,33 @@ class TestUseCases(unittest.TestCase):
       self.assertListEqual(expected_out, actual_out)
 
   def test_US35(self):
+      sample_date = datetime.date(2023, 4, 20)
       expected_out = ['Within ThirtyDays']
 
       indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US35_recentbirths.ged')
-      actual_out = p2.user_story_35(indDict, famDict)
+      actual_out = p2.user_story_35(indDict, famDict, sample_date)
 
       self.assertListEqual(expected_out, actual_out)
 
+  def test_US36(self):
+      sample_date = datetime.date(2023, 4, 20)
+      
+      expected_out = ['Dead Guy, 15 APR 2023']
+
+      indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US_36_37.ged')
+      actual_out = p2.list_recent_deaths(indDict, sample_date)
+
+      self.assertCountEqual(expected_out, actual_out)
+
+  def test_US37(self):
+      sample_date = datetime.date(2023, 4, 20)
+      
+      expected_out = ['WifeOf Guy', 'ChildOf Guy', 'FirstChild OfGuy']
+
+      indDict, famDict = p2.analyse_gedcom('.\\TestGedcomFiles\\US_36_37.ged')
+      actual_out = p2.list_recent_survivors(indDict, famDict, sample_date)
+
+      self.assertCountEqual(expected_out, actual_out)
 
   def test_US38(self):
       sample_date = datetime.date(2022, 4, 18)

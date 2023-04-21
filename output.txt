@@ -74,6 +74,18 @@ Doranna Emmanuel
 Orphans (US33):
 None
 
+Couples with large age differences (US34):
+('Moses Emmanuel', 'Shana Brook')
+
+Births within last 30 days (US35):
+None
+
+Deaths within last 30 days (US36):
+None
+
+Survivors within last 30 days (US37):
+None
+
 Birthdays within 30 days (US38):
 Shannon Baldwin, 3 MAY 1978
 Nina Wendel, 15 MAY 2014

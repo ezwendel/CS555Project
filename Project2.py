@@ -10,38 +10,79 @@ from prettytable import PrettyTable
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-def list_recent_deaths(individuals):
+def list_recent_deaths(indDict, curr_date):
     """
     Lists the individuals who died in the last 30 days.
     """
-    current_date = datetime.today()
-    thirty_days_ago = current_date - timedelta(days=30)
     recent_deaths = []
 
-    for individual in individuals:
-        if individual.is_dead():
-            death_date = individual.get_death_date()
-            if death_date >= thirty_days_ago and death_date <= current_date:
-                recent_deaths.append(individual)
+    for indId in indDict.keys():
+      indInfo = indDict[indId]
+
+      deat = indInfo['deat'][0]
+      name = indInfo['name'][0]
+
+      if (deat != "N/A"):
+        deat_object = datetime.strptime(deat, '%d %b %Y').date()
+        if (within_last_30_days(deat_object, curr_date)):
+          recent_deaths.append(f'{name}, {deat}')
 
     return recent_deaths
 
-from datetime import datetime, timedelta
+def list_recent_survivors(indDict, famDict, curr_date):
+  recent_survivors = []
 
-def list_recent_survivors(individuals):
-    recent_survivors = []
-    today = datetime.today()
-    for individual in individuals:
-        if 'DEAT' not in individual:
-            continue
-        death_date = datetime.strptime(individual['DEAT'], '%Y-%m-%d')
-        if today - death_date > timedelta(days=30):
-            continue
-        for family in individuals[individual['FAMC']]['FAMS']:
-            spouse = individuals[family]['HUSB'] if individual['SEX'] == 'F' else individuals[family]['WIFE']
-            if 'DEAT' not in individuals[spouse] or death_date < datetime.strptime(individuals[spouse]['DEAT'], '%Y-%m-%d'):
-                recent_survivors.append(spouse)
-    return recent_survivors
+  for famId in famDict.keys():
+    famInfo = famDict[famId]
+    
+    husbId = famInfo['husbId'][0]
+    wifeId = famInfo['wifeId'][0]
+
+    husbName = indDict[husbId]['name'][0]
+    wifeName = indDict[wifeId]['name'][0]
+
+    husbDeat = indDict[husbId]['deat'][0]
+    wifeDeat = indDict[wifeId]['deat'][0]
+
+    marr = famInfo['marr'][0]
+    div = famInfo['div'][0]
+    chil = famInfo['chil']
+
+    if (husbDeat != "N/A"):
+      deat_object = datetime.strptime(husbDeat, '%d %b %Y').date()
+      if (within_last_30_days(deat_object, curr_date)):
+        if (wifeDeat == "N/A" and div == "N/A"):
+          recent_survivors.append(wifeId)
+
+        for child in chil:
+          chilInfo = indDict[child[0]]
+          chilDeat = chilInfo['deat'][0]
+
+          if (chilDeat == "N/A"):
+            recent_survivors.append(child[0])
+    elif (wifeDeat != "N/A"):
+      deat_object = datetime.strptime(wifeDeat, '%d %b %Y').date()
+      if (within_last_30_days(deat_object, curr_date)):
+        if (husbDeat == "N/A" and div == "N/A"):
+          recent_survivors.append(husbId)
+
+        for child in chil:
+          chilInfo = indDict[child[0]]
+          chilDeat = chilInfo['deat'][0]
+
+          if (chilDeat == "N/A"):
+            recent_survivors.append(child[0])
+
+  recent_survivors = list(set(recent_survivors))
+
+  recent_survivor_names = []
+
+  for surv in recent_survivors:
+    survInfo = indDict[surv]
+    survName = survInfo['name'][0]
+    recent_survivor_names.append(survName)
+
+  return recent_survivor_names
 
 
 def birth_before_death_of_parents(families, individuals):
@@ -154,9 +195,13 @@ def next_anni_after(anni_date, curr_date):
     anni_date += relativedelta(years=1)
   return anni_date
 
+def within_last_30_days(date, current_datetime):
+  days = (current_datetime - date).total_seconds() / 86400
+  return days <= 30 and days >= 0
+
 def within_30_days(date, current_datetime):
   days = (next_anni_after(date, current_datetime) - current_datetime).total_seconds() / 86400
-  return days < 30 and days >= 0
+  return days <= 30 and days >= 0
 
 def birth_before_death(indDict):
     error_list = []
@@ -956,20 +1001,19 @@ def user_story_34(indDict, famDict):
           
     return large_age_diff_list
 
-def user_story_35(indDict, famDict):
+def user_story_35(indDict, famDict, curr_date):
+  recent_births_list = []
+  
   for indId in indDict.keys():
     indInfo = indDict[indId]
 
     birt = indInfo['birt'][0]
     name = indInfo['name'][0]
 
-    current_datetime = datetime.date(datetime.now())
-
-    recent_births_list = []
 
     if (birt != 'N/A'):
       birt_object = datetime.strptime(birt, '%d %b %Y').date()
-      if (within_30_days(birt_object, current_datetime)):
+      if (within_last_30_days(birt_object, curr_date)):
         recent_births_list.append(name)
 
   return recent_births_list
@@ -1086,6 +1130,14 @@ if __name__ == "__main__":
   
   user_story_33_list = user_story_33(indDict, famDict)
 
+  user_story_34_list = user_story_34(indDict, famDict)
+
+  user_story_35_list = user_story_35(indDict, famDict, datetime.now().date())
+
+  user_story_36_list = list_recent_deaths(indDict, datetime.now().date())
+
+  user_story_37_list = list_recent_survivors(indDict, famDict, datetime.now().date())
+
   user_story_38_list = user_story_38(indDict, datetime.now().date())
 
   user_story_39_list = user_story_39(indDict, famDict, datetime.now().date())
@@ -1115,6 +1167,14 @@ if __name__ == "__main__":
     print_list("Multiple Births (US32):",user_story_32_list, out)
     out.write("\n")
     print_list("Orphans (US33):",user_story_33_list, out)
+    out.write("\n")
+    print_list("Couples with large age differences (US34):",user_story_34_list, out)
+    out.write("\n")
+    print_list("Births within last 30 days (US35):",user_story_35_list, out)
+    out.write("\n")
+    print_list("Deaths within last 30 days (US36):",user_story_36_list, out)
+    out.write("\n")
+    print_list("Survivors within last 30 days (US37):",user_story_37_list, out)
     out.write("\n")
     print_list("Birthdays within 30 days (US38):",user_story_38_list, out)
     out.write("\n")
