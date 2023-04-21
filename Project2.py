@@ -10,6 +10,39 @@ from prettytable import PrettyTable
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+def list_recent_deaths(individuals):
+    """
+    Lists the individuals who died in the last 30 days.
+    """
+    current_date = datetime.today()
+    thirty_days_ago = current_date - timedelta(days=30)
+    recent_deaths = []
+
+    for individual in individuals:
+        if individual.is_dead():
+            death_date = individual.get_death_date()
+            if death_date >= thirty_days_ago and death_date <= current_date:
+                recent_deaths.append(individual)
+
+    return recent_deaths
+
+from datetime import datetime, timedelta
+
+def list_recent_survivors(individuals):
+    recent_survivors = []
+    today = datetime.today()
+    for individual in individuals:
+        if 'DEAT' not in individual:
+            continue
+        death_date = datetime.strptime(individual['DEAT'], '%Y-%m-%d')
+        if today - death_date > timedelta(days=30):
+            continue
+        for family in individuals[individual['FAMC']]['FAMS']:
+            spouse = individuals[family]['HUSB'] if individual['SEX'] == 'F' else individuals[family]['WIFE']
+            if 'DEAT' not in individuals[spouse] or death_date < datetime.strptime(individuals[spouse]['DEAT'], '%Y-%m-%d'):
+                recent_survivors.append(spouse)
+    return recent_survivors
+
 
 def birth_before_death_of_parents(families, individuals):
     errors = []
